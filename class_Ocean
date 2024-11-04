@@ -1,18 +1,113 @@
-class Ocean 
-    private Ship[] [] ships = new Ship[10][10] 
-    private int shotsFired 
-    private int hitCount 
-    private int shipsSunk 
+package battleship;
 
-    public Ocean() 
+public class Ocean {
+    private Ship[] [] ships = new Ship[10][10]; 
+    private int shotsFired; 
+    private int hitCount; 
+    private int shipsSunk; 
+    
+    /**
+     * creates an empty ocean and fills ship array with emptysea objects 
+     * initialize any game variables such as how many shots have been fired 
+     */
+    public Ocean()  {
+    	
+    }
+    
+    /**
+     * place 10 ships 
+     * place large ships before small ships to ensure there is space to place all ships 
+     * use random class 
+     * use printWithShips() below to check and debug 
+     */
+    void placeAllShipsRandomly() {
+    	
+    }
+    
+    /**
+     * return true if given location contains a ship, false if not 
+     * @param row
+     * @param column
+     * @return
+     */
+    boolean isOccupied(int row, int column) {
+    	
+    }
+    
+    /**
+     * return true if given location contains a real ship that is not sunk, false if not or sunk. 
+     * @param row
+     * @param column
+     * @return
+     */
+    boolean shootAt(int row, int column) {
+    	
+    }
+    
+    /**
+     * return number of shots fired in game 
+     * @return
+     */
+    int getShotsFired() {
+    	
+    }
+    
+    /**
+     * return number of hits recorded in game 
+     * @return
+     */
+    int getHitCount() {
+    	
+    }
+    
+    /**
+     * return number of ships sunk in game 
+     * @return
+     */
+    int getShipsSunk() {
+    	
+    }
+    
+    /**
+     * true if all ships have been sunk, otherwise false 
+     * @return
+     */
+    boolean isGameOver() {
+    	
+    }
+    
+    /**
+     * return the 10x10 array of ships, take Ocean parameter and need to be able to look at the contents of this array 
+     * placeShipAt() method needs to modify this. 
+     * allow methods in one class to directly access instance var in another class - not ideal but no alternative 
+     * @return
+     */
+    Ship[][]getShipArray() {
+    	
+    }
+    
+    /**
+     * prints the ocean status - numbers should be displayed 1 to 10 not 0 to 9 
+     * top left is 0,0 
+     * x means fired upon and hit a ship 
+     * - means fired upon and nothing there 
+     * s means sunken ship 
+     * . means never fired upon 
+     */
+    void print() {
+    	
+    }
+    
+    /**
+     * used for debugging - shows location of the ships 
+     * b means battleship
+     * c means cruiser 
+     * d means destroyer 
+     * s means submarine 
+     * ' ' means empty sea (single space) 
+     */
+    void printWithShips() {
+    	
+    }
 
-    void placeAllShipsRandomly() 
-    boolean isOccupied(int row, int column) 
-    boolean shootAt(int row, int column) 
-    int getShotsFired() 
-    int getHitCount() 
-    int getShipsSunk() 
-    boolean isGameOver()
-    Ship[][]getShipArray() 
-    void print() 
-    void printWithShips() 
+}
