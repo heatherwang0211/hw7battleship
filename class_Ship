@@ -30,3 +30,12 @@ class Destroyer extends Ship
 class Submarine extends Ship 
 
 class EmptySea extends Ship 
+        public EmptySea()
+        @Override 
+        boolean ShootAt(int row, int column) 
+        @Override 
+        boolean isSunk() 
+        @Override 
+        public String toString() 
+        @Override 
+        public String getShipType() 
