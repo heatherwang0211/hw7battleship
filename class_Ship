@@ -1,41 +1,150 @@
-abstract class Ship 
-    private int bowRow 
-    private int bowColumn 
-    private int length 
-    private boolean horizontal 
-    private boolean[] hit 
-    public Ship (int length) 
-    public int getlength()
-    public int getBowRow() 
-    public int getBowColumn() 
-    public boolean[] getHit() 
-    public boolean isHorizontal() 
-    public void setBowRow(int row) 
-    public void setBowCOlumn(int column) 
-    public void setHorizontal (boolean horizontal) 
-    public abstract String getShipType() 
-    booleam okToPlaceShipAt(int row, int column, boolean horizontal, Ocean ocean) 
-    void placeShipAt(int row, int column, boolean horizontal, Ocean ocean) 
-    boolean ShootAt(int row, int column) 
-    boolean isSunk() 
+package battleship;
+
+public abstract class Ship {
+	// the row that contains the bow (front of the ship)
+	private int bowRow; 
+	
+	// the column that contains the bow (front of the ship) 
+    private int bowColumn; 
+    
+    // the length of the ship 
+    private int length; 
+    
+    // represents whether the ship is going to be placed horizontally or vertically 
+    private boolean horizontal; 
+    
+    // array of booleans whether the ship is going to be placed horizontally or vertically 
+    private boolean[] hit; 
+    
+    /**
+     * sets the length property of the ship and initializes the hit array based on that length 
+     * @param length
+     */
+    public Ship (int length) {
+    	
+    }
+    
+    // GETTERS AND SETTERS 
+    
+    /**
+     * returns the ship length 
+     * @return
+     */
+    public int getlength() {
+    	
+    }
+    
+    /**
+     * returns the row corresponding to the position of the bow 
+     * @return
+     */
+    public int getBowRow() {
+    	
+    }
+    
+    /** 
+     * returns bow column location 
+     * @return
+     */
+    public int getBowColumn() {
+    	
+    }
+    
+    /**
+     * returns the hit array 
+     * @return
+     */
+    public boolean[] getHit() {
+    	
+    }
+    
+    /**
+     * returns whether the ship is horizontal or not 
+     * @return
+     */
+    public boolean isHorizontal() {
+    	
+    }
+    
+    /**
+     * sets the value of bowRow 
+     * @param row
+     */
+    public void setBowRow(int row) {
+    	
+    }
+    
+    /**
+     * sets the value of bowColumn 
+     * @param column
+     */
+    public void setBowCOlumn(int column) {
+    	
+    }
+    
+    /**
+     * sets the value of the instance variable horizontal 
+     * @param horizontal
+     */
+    public void setHorizontal (boolean horizontal) {
+    	
+    }
+    
+    /**
+     * every type of ship has to override and implement and return the corresponding ship type 
+     * @return type of ship as a string 
+     */
+    public abstract String getShipType(); {
+    	
+    }
+    
+    /**
+     * based on the conditions, returns whether a ship can be placed at this location 
+     * @param row
+     * @param column
+     * @param horizontal
+     * @param ocean
+     * @return
+     */
+    boolean okToPlaceShipAt(int row, int column, boolean horizontal, Ocean ocean) {
+    	
+    }
+    
+    /**
+     * puts the ship in the ocean at a location 
+     * @param row
+     * @param column
+     * @param horizontal
+     * @param ocean
+     */
+    void placeShipAt(int row, int column, boolean horizontal, Ocean ocean) {
+    	
+    }
+    
+    /**
+     * this method marks a ship as being hit if the ship is at a certain row or column 
+     * @param row
+     * @param column
+     * @return
+     */
+    boolean shootAt(int row, int column) {
+    	
+    }
+    
+    /**
+     * returns true if every part of the ship has been hit and false otherwise 
+     * @return
+     */
+    boolean isSunk() {
+    	
+    }
+    
+    /**
+     * returns single character string to use in the ocean print method 
+     */
     @Override 
-    public String toString() 
+    public String toString() {
+    	
+    }
 
-class Battleship extends Ship 
-
-class Cruiser extends Ship 
-
-class Destroyer extends Ship 
-
-class Submarine extends Ship 
-
-class EmptySea extends Ship 
-        public EmptySea()
-        @Override 
-        boolean ShootAt(int row, int column) 
-        @Override 
-        boolean isSunk() 
-        @Override 
-        public String toString() 
-        @Override 
-        public String getShipType() 
+} 
