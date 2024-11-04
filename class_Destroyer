@@ -1,0 +1,8 @@
+package battleship;
+
+/**
+ * describes a ship of length 2
+ */
+public class Destroyer extends Ship {
+	
+}
