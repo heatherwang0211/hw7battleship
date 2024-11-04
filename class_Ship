@@ -24,14 +24,14 @@ public abstract class Ship {
     	
     }
     
-    // GETTERS AND SETTERS 
+    // GETTERS 
     
     /**
      * returns the ship length 
      * @return
      */
     public int getlength() {
-    	
+    	return length;
     }
     
     /**
@@ -39,7 +39,7 @@ public abstract class Ship {
      * @return
      */
     public int getBowRow() {
-    	
+    	return bowRow;
     }
     
     /** 
@@ -47,7 +47,7 @@ public abstract class Ship {
      * @return
      */
     public int getBowColumn() {
-    	
+    	return bowColumn;
     }
     
     /**
@@ -55,7 +55,7 @@ public abstract class Ship {
      * @return
      */
     public boolean[] getHit() {
-    	
+    	return hit;
     }
     
     /**
@@ -63,23 +63,24 @@ public abstract class Ship {
      * @return
      */
     public boolean isHorizontal() {
-    	
+    	return horizontal;
     }
     
+    // SETTERS
     /**
      * sets the value of bowRow 
      * @param row
      */
     public void setBowRow(int row) {
-    	
+    	this.bowRow = row;
     }
     
     /**
      * sets the value of bowColumn 
      * @param column
      */
-    public void setBowCOlumn(int column) {
-    	
+    public void setBowColumn(int column) {
+    	this.bowColumn = column;
     }
     
     /**
@@ -87,7 +88,7 @@ public abstract class Ship {
      * @param horizontal
      */
     public void setHorizontal (boolean horizontal) {
-    	
+    	this.horizontal = horizontal; 
     }
     
     /**
@@ -95,7 +96,7 @@ public abstract class Ship {
      * @return type of ship as a string 
      */
     public abstract String getShipType(); {
-    	
+    	this.shipType = shipType; 
     }
     
     /**
