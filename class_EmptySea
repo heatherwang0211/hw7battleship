@@ -1,0 +1,46 @@
+package battleship;
+
+/**
+ * describes a part of the ocean that is empty 
+ */ 
+public class EmptySea extends Ship {
+
+			/**
+			 * zero argument constructor, sets the length variable to 1 by calling constructor in superclass 
+			 */
+			public EmptySea() {
+			
+			/**
+			 * overrides shootAt inherited from ship, return false because nothing was hit 
+			 */
+	        @Override 
+	        boolean ShootAt(int row, int column) {
+	        	
+	        }
+	        
+	        /**
+	         * overrides isSunk inherited from Ship, return false to indicate that you did not sink anything
+	         */
+	        @Override 
+	        boolean isSunk() {
+	        	
+	        }
+	        
+	        /**
+	         * return single character "-" to use in ocean's print method 
+	         */
+	        @Override 
+	        public String toString() {
+	        	
+	        }
+	        
+	        /**
+	         * returns battleship, cruiser, destroyer or battleship 
+	         * this will return the string empty because the sea is empty 
+	         */
+	        @Override 
+	        public String getShipType() {
+	        	
+	        }
+	}
+}
