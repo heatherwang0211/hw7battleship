@@ -49,7 +49,7 @@ public class Ocean {
      * @return
      */
     int getShotsFired() {
-    	
+    	return shotsFired;
     }
     
     /**
@@ -57,7 +57,7 @@ public class Ocean {
      * @return
      */
     int getHitCount() {
-    	
+    	return hitCount;
     }
     
     /**
@@ -65,7 +65,7 @@ public class Ocean {
      * @return
      */
     int getShipsSunk() {
-    	
+    	return shipsSunk;
     }
     
     /**
