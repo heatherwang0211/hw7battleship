@@ -1,0 +1,32 @@
+abstract class Ship 
+    private int bowRow 
+    private int bowColumn 
+    private int length 
+    private boolean horizontal 
+    private boolean[] hit 
+    public Ship (int length) 
+    public int getlength()
+    public int getBowRow() 
+    public int getBowColumn() 
+    public boolean[] getHit() 
+    public boolean isHorizontal() 
+    public void setBowRow(int row) 
+    public void setBowCOlumn(int column) 
+    public void setHorizontal (boolean horizontal) 
+    public abstract String getShipType() 
+    booleam okToPlaceShipAt(int row, int column, boolean horizontal, Ocean ocean) 
+    void placeShipAt(int row, int column, boolean horizontal, Ocean ocean) 
+    boolean ShootAt(int row, int column) 
+    boolean isSunk() 
+    @Override 
+    public String toString() 
+
+class Battleship extends Ship 
+
+class Cruiser extends Ship 
+
+class Destroyer extends Ship 
+
+class Submarine extends Ship 
+
+class EmptySea extends Ship 
