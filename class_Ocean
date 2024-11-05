@@ -31,7 +31,16 @@ public class Ocean {
      * @return
      */
     boolean isOccupied(int row, int column) {
+    	// iterate over the int rows and columns 
+    	// if the location is occupied return true 
+    	if {
+    	return true;
     	
+    	}
+    	// if the location is not occupied return false 
+    	else {
+    	return false;
+    	}
     }
     
     /**
@@ -40,8 +49,7 @@ public class Ocean {
      * @param column
      * @return
      */
-    boolean shootAt(int row, int column) {
-    	
+    boolean shootAt(int row, int column) { 
     }
     
     /**
