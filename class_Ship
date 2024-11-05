@@ -126,7 +126,17 @@ public abstract class Ship {
     	}
     	
     	// if above pass, then check if there is ship around 
-    	// ensure there is enough distance and then place 
+    	// ensure there is enough distance
+    	
+    	// if enough distance, return true 
+    	if  {
+    		return true; 
+    	}
+    	
+    	// if not enough distance, return false 
+    	else {
+    		return false;
+    	}
     	
     }
     	
@@ -157,12 +167,20 @@ public abstract class Ship {
      * @return
      */
     boolean shootAt(int row, int column) {
+    	
+    	// first check if the boat is still afloat 
     	if (!isSunk()) { 
+    			// if the ship is not empty sea 
     			if (getShipType() != "Empty") {
+    			
+    			// check if the place being hit is already hit 
+    			// if not, return true 
                 return true;
-            }
+            }	
+    			//if the ship is empty sea return false 
     			return false;
         }
+    	// if ship is already sunk return false 
     	return false;
     }
     
@@ -171,6 +189,31 @@ public abstract class Ship {
      * @return
      */
     boolean isSunk() {
+    	//initialize whether the index of the boat is hit or not 
+    	boolean partHit = false;
+    	if (getShipType() != "Empty") {
+    		// iterate over every part of the ship to see if hit
+    		for () {
+    			// if part of the ship is hit
+    			if getHit() { 
+    				partHit = true;
+    			}
+    			
+    			// if that part of the ship is not hit
+    			else {
+    				partHit = false;
+    			}
+    		}
+    		
+    		// check for how long the boat is? for the different types of ships 
+    		// if ALL PARTS are partHit hit 
+    		if {
+    		return true;
+    		}
+    		
+    		else {
+    			return false;
+    		}
     	
     }
     
