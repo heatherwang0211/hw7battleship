@@ -4,5 +4,14 @@ package battleship;
  * describes a ship of length 2
  */
 public class Destroyer extends Ship {
+	public static final int LENGTH = 2;
+	public static final String TYPE = "Destroyer";
 	
+	public Destroyer() {
+		super(LENGTH);
+}
+	@Override
+	public String getShipType() {
+		return TYPE;
+	}
 }
