@@ -16,7 +16,7 @@ public class EmptySea extends Ship {
 			 * overrides shootAt inherited from ship, return false because nothing was hit 
 			 */
 	        @Override 
-	        boolean ShootAt(int row, int column) {
+	        boolean shootAt(int row, int column) {
 	        	return false;
 	        }
 	        
