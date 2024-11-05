@@ -4,18 +4,20 @@ package battleship;
  * describes a part of the ocean that is empty 
  */ 
 public class EmptySea extends Ship {
-
+			public static final int LENGTH = 1;
+			public static final String TYPE = "Empty";
 			/**
 			 * zero argument constructor, sets the length variable to 1 by calling constructor in superclass 
 			 */
 			public EmptySea() {
-			
+				super(LENGTH);
+			}
 			/**
 			 * overrides shootAt inherited from ship, return false because nothing was hit 
 			 */
 	        @Override 
 	        boolean ShootAt(int row, int column) {
-	        	
+	        	return false;
 	        }
 	        
 	        /**
@@ -23,7 +25,7 @@ public class EmptySea extends Ship {
 	         */
 	        @Override 
 	        boolean isSunk() {
-	        	
+	        	return false;
 	        }
 	        
 	        /**
@@ -31,7 +33,7 @@ public class EmptySea extends Ship {
 	         */
 	        @Override 
 	        public String toString() {
-	        	
+	        	return "-";
 	        }
 	        
 	        /**
@@ -40,7 +42,6 @@ public class EmptySea extends Ship {
 	         */
 	        @Override 
 	        public String getShipType() {
-	        	
+	        	return TYPE;
 	        }
 	}
-}
