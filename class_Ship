@@ -21,7 +21,7 @@ public abstract class Ship {
      * @param length
      */
     public Ship (int length) {
-    	
+    	this.length = length; 
     }
     
     // GETTERS 
@@ -95,9 +95,8 @@ public abstract class Ship {
      * every type of ship has to override and implement and return the corresponding ship type 
      * @return type of ship as a string 
      */
-    public abstract String getShipType(); {
-    	this.shipType = shipType; 
-    }
+    public abstract String getShipType();  
+    
     
     /**
      * based on the conditions, returns whether a ship can be placed at this location 
@@ -108,8 +107,29 @@ public abstract class Ship {
      * @return
      */
     boolean okToPlaceShipAt(int row, int column, boolean horizontal, Ocean ocean) {
+    	// set the maximum valid indexes in ocean, and indexes are one less (count starts from 0)
+    	int maxRow = ocean.getShipArray().length -1;
+    	int maxCol = ocean.getShipArray()[0].length -1;
+    	
+    	// if ship horizontal, check if can place ship there 
+    	if (horizontal = true) {
+    		// if column - length is < 0, too long, can't place there 
+    		if (column - (length -1) < 0) {
+    			return false;
+    		}
+    		// if row - length is < 0, too long, can't place ship there 
+    		else {
+    			if (row - (length - 1) < 0) {
+    				return false;
+    			}
+    		}
+    	}
+    	
+    	// if above pass, then check if there is ship around 
+    	// ensure there is enough distance and then place 
     	
     }
+    	
     
     /**
      * puts the ship in the ocean at a location 
@@ -119,9 +139,17 @@ public abstract class Ship {
      * @param ocean
      */
     void placeShipAt(int row, int column, boolean horizontal, Ocean ocean) {
+    	// set ship row, column, and orientation 
+    	setBowRow(row);
+    	setBowColumn(column);
+    	setHorizontal(horizontal);
     	
+    	// ??? 
+        
     }
+
     
+ 
     /**
      * this method marks a ship as being hit if the ship is at a certain row or column 
      * @param row
@@ -129,7 +157,13 @@ public abstract class Ship {
      * @return
      */
     boolean shootAt(int row, int column) {
-    	
+    	if (!isSunk()) { 
+    			if (getShipType() != "Empty") {
+                return true;
+            }
+    			return false;
+        }
+    	return false;
     }
     
     /**
@@ -145,7 +179,9 @@ public abstract class Ship {
      */
     @Override 
     public String toString() {
-    	
+    	// if sunk, return s for sunk
+    	// if not sunk, return x for ship still there but has been hit
+    	return isSunk() ? "s" : "x";
     }
 
 } 
