@@ -1,17 +1,46 @@
 package battleship;
+import java.util.Random;
 
 public class Ocean {
-    private Ship[] [] ships = new Ship[10][10]; 
+    private Ship[][] ships = new Ship[10][10]; 
     private int shotsFired; 
     private int hitCount; 
     private int shipsSunk; 
     
+    
+    // set ship types with predetermined lengths (Battleship: 4, Cruiser: 3, Destroyer: 2, Submarine: 1)
+    private static final Ship[] SHIP_TYPES = {
+        new Battleship(),
+        new Cruiser(), 
+        new Destroyer(), 
+        new Submarine(), 
+    };
     /**
      * creates an empty ocean and fills ship array with emptysea objects 
      * initialize any game variables such as how many shots have been fired 
      */
     public Ocean()  {
-    	
+    	// initialize grid 
+    	ships = new Ship[10][10];
+    	// initially no shots are fired 
+    	shotsFired = 0;
+    	// call private helper function 
+    	fillEmptySea();
+    }
+    
+    /**
+     * private helper function for the public ocean method to help fill with emptysea 
+     */
+    private void fillEmptySea() {
+    	// iterate over the row and columns,then assign emptysea to the whole grid
+    	// for each of the rows 
+    	for (int row = 0; row < ships.length; row ++) {
+    		// for each of the column numbers corresponding to the rows 
+    		for (int col = 0; col < ships[row].length; col ++) {
+    			// assign the location a ship (EmptySea) 
+    			ships[row][col] = new EmptySea();
+    		}
+    	}
     }
     
     /**
@@ -20,8 +49,26 @@ public class Ocean {
      * use random class 
      * use printWithShips() below to check and debug 
      */
-    void placeAllShipsRandomly() {
-    	
+   public void placeAllShipsRandomly() {
+    	Random random = new Random();
+    	for (Ship ship : SHIP_TYPES) {
+    		boolean shipPlaced = false;
+    		
+    		while (shipPlaced = false) {
+    			// randomly generate row index 
+    			int row = random.nextInt(10);
+    			// randomly generate column index 
+    			int column = random.nextInt(10);
+    			// ranodm generate a ship orientation 
+    			boolean horizontal = random.nextBoolean();
+    			
+    			//check if the ship is allowed to be placed at generated location 
+    			if (ship.okToPlaceShipAt(row, column, horizontal, ???)) {
+    				ship.placeShipAt(row, column, horizontal, ?????);
+                    shipPlaced = true;
+    			}
+    		}
+    	}
     }
     
     /**
@@ -30,7 +77,7 @@ public class Ocean {
      * @param column
      * @return
      */
-    boolean isOccupied(int row, int column) {
+   public boolean isOccupied(int row, int column) {
     	// iterate over the int rows and columns 
     	// if the location is occupied return true 
     	if {
@@ -90,8 +137,8 @@ public class Ocean {
      * allow methods in one class to directly access instance var in another class - not ideal but no alternative 
      * @return
      */
-    Ship[][]getShipArray() {
-    	
+   public Ship[][]getShipArray() {
+    	return ships;
     }
     
     /**
@@ -102,7 +149,7 @@ public class Ocean {
      * s means sunken ship 
      * . means never fired upon 
      */
-    void print() {
+   public void print() {
     	
     }
     
