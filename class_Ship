@@ -204,14 +204,6 @@ public abstract class Ship {
     				partHit = false;
     			}
     		}
-    		
-    		// check for how long the boat is? for the different types of ships 
-    		// if ALL PARTS are partHit hit 
-    		if {
-    		return true;
-    		}
-    		
-    		else {
     			return false;
     		}
     	
