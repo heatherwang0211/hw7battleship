@@ -13,7 +13,7 @@ public abstract class Ship {
     // represents whether the ship is going to be placed horizontally or vertically 
     private boolean horizontal; 
     
-    // array of booleans whether the ship is going to be placed horizontally or vertically 
+    // boolean array indicating whether the ship part is hit or not 
     private boolean[] hit; 
     
     /**
@@ -21,7 +21,10 @@ public abstract class Ship {
      * @param length
      */
     public Ship (int length) {
+    	// initialize the length to this length 
     	this.length = length; 
+    	// initialize the hit boolean to this, based on the length of the ship 
+    	this.hit = new boolean[length];
     }
     
     // GETTERS 
@@ -93,9 +96,10 @@ public abstract class Ship {
     
     /**
      * every type of ship has to override and implement and return the corresponding ship type 
+     * since it will get overridden by the extended methods, this one does not have a body 
      * @return type of ship as a string 
      */
-    public abstract String getShipType();  
+    public abstract String getShipType();
     
     
     /**
@@ -107,38 +111,90 @@ public abstract class Ship {
      * @return
      */
     boolean okToPlaceShipAt(int row, int column, boolean horizontal, Ocean ocean) {
-    	// set the maximum valid indexes in ocean, and indexes are one less (count starts from 0)
+    	// set the maximum valid indexes in ocean
+    	// arrays are 0-indexed, so if 10 rows the max is actually 10-1 = 9  
     	int maxRow = ocean.getShipArray().length -1;
+    	// get the first row (could be any but use first for convenience) 
     	int maxCol = ocean.getShipArray()[0].length -1;
     	
     	// if ship horizontal, check if can place ship there 
     	if (horizontal = true) {
-    		// if column - length is < 0, too long, can't place there 
-    		if (column - (length -1) < 0) {
+    		// if horizontal, ship extends across multiple columns 
+    		// max column minus ship length should be more than 0 to fit in 
+    		// say, ship of length 3 is taking up 2 more spots to the left (length - 1)
+    		// the columns total - how many more columns needed cannot be less than 0 
+    		// check if row is between the max and min 
+    		if ( row < 0 || row > maxRow || column - (length - 1) < 0 ) {
+    			// cannot place ship if any of conditions not met 
     			return false;
     		}
-    		// if row - length is < 0, too long, can't place ship there 
+    	}
+    		// if ship is vertical, check if can place ship there 
     		else {
-    			if (row - (length - 1) < 0) {
+    			// if vertical, ship extends across multiple rows 
+    			// max row minus ship length should be more than 0 to fit in  
+    			// say, ship of length 3 is taking up 2 more spots to the top (length - 1)
+    			// then, the row total - how many more needed needs to be more than 0 
+    			// ensure the column is between the max and min
+    			if ( column < 0 || column > maxCol || row - (length - 1 ) < 0 ) {
+    				// cannot place ship if any conditions not met 
     				return false;
     			}
     		}
-    	}
     	
-    	// if above pass, then check if there is ship around 
-    	// ensure there is enough distance
+    	// initialize all the rows and columns currently iterating through to place ship at
+    	// this represents the whole ship coordinate as it is being iterated through
+    	int thisRow; 
+    	int thisColumn;
+    	// iterate over the whole ship, in all of its length 
+    	for (int i = 0; i < length; i ++ ) {
+    		// if horizontal 
+    		if (horizontal) {
+    			//then this row currently is where the ship row will be for the whole ship 
+    			thisRow = row; 
+    		}
+    		// if vertical 
+    		else {
+    			// this row will not be where all the ship will be 
+    			// this ship will take place at total row - ship length (vertical)
+    			// we do minus because it faces south, the row decreases from the bow (moving up)
+    			thisRow = row - i;
+    		
+    		} 
+    		// if horizontal
+    		if (horizontal) {
+    			// then this column is NOT where all the ship will be
+    			// the ship will take place facing right, the column decreases from the bow (moving left)
+    			thisColumn = column - i;
+    		}
+    		// if vertical 
+    		else {
+    			//then this column currently is where the ship will be for the whole ship
+    			thisColumn = column;
+    		} 
+    		
+    		// iterate over rows for every column 
+    		// for every row within the scope, check next to it up and down 
+    		for (int r = thisRow - 1; r <= thisRow + 1; r ++) {
+    			// for every column within the scope, check next to it left and right 
+    			for (int c = thisColumn - 1; c <= thisColumn + 1; c ++) {
+    				// if row checked is within bounds, and column checked is within bounds 
+    				if (r >= 0 && r <= maxRow && c >= 0 && c <= maxCol) {
+    					// and if the ship's array is NOT part of the emptysea class, 
+    					// meaning the ship is a real existing ship not emptysea 
+    					// it is NOT OK to place ship there 
+    					if  (!(ocean.getShipArray()[r][c] instanceof EmptySea)) {
+    						return false;
+    					}
+    				}
+    			}
+    		}
+    	} 
     	
-    	// if enough distance, return true 
-    	if  {
-    		return true; 
-    	}
-    	
-    	// if not enough distance, return false 
-    	else {
-    		return false;
-    	}
-    	
+    	// if none of the above checks returned false, then it is OK to place the ship there 
+    	return true; 
     }
+    	
     	
     
     /**
@@ -154,8 +210,22 @@ public abstract class Ship {
     	setBowColumn(column);
     	setHorizontal(horizontal);
     	
-    	// ??? 
-        
+    	//if ship is horizontal 
+    	if (horizontal) {
+    		// iterate over the location starting from 0 to length
+    		for (int i = 0; i < length; i ++ ) {
+    			// ship placement in ocean is exact the row for horizontal, column is decreasing from the bow moving left
+    			ocean.getShipArray()[row][column - i] = this;    
+    	}
+    	}
+    	// if ship is vertical 
+    	else {
+    		// iterate over the location starting from 0 to length 
+    		for (int i = 0; i < length; i ++ ) {
+    			// ship placement in ocean is exact column for vertical, row decreasing from bow because moving up/ number descending 
+    			ocean.getShipArray()[row - i][column] = this;
+    		}
+    	}
     }
 
     
@@ -169,44 +239,67 @@ public abstract class Ship {
     boolean shootAt(int row, int column) {
     	
     	// first check if the boat is still afloat 
-    	if (!isSunk()) { 
-    			// if the ship is not empty sea 
-    			if (getShipType() != "Empty") {
-    			
-    			// check if the place being hit is already hit 
-    			// if not, return true 
-                return true;
-            }	
-    			//if the ship is empty sea return false 
-    			return false;
-        }
-    	// if ship is already sunk return false 
-    	return false;
-    }
+    	// if not afloat then return false because it cannot be shot at 
+    	if (isSunk()) { 
+    			return false; 
+    	}
+    	
+    	// placeholder of where it is shot counting from the front of the ship 
+    	int indexShotOnShip; 
+    	// if ship is horizontal - the placement of front is bowRow, bowColumn 
+    	// the shot has to be the SAME as bowrow OR bowcolumn OR within the columns that make up the ship 
+    	if (horizontal) {
+    		// if the front coordinate is not the same as shot coordinate
+    		// OR bc horizontal, extends across several columns, face east
+    		// if the column is outside the rightmost boundary(front) + length of boat
+    		// then it is false because it cannot be shot at 
+    		if (row != bowRow || column != bowColumn || column >= bowColumn + length ) {
+    			return false; 
+    		}
+    		
+    		// else index of the shot part on the ship column 
+    		indexShotOnShip = column - bowColumn; 
+    	}
+    	// the shot has to be the SAME as bowrow OR bowcolumn OR within the rows that make up the ship 
+    	else {
+    		// if not horizontal, check if it on the same vertical
+    		// then check if the vertical ships facing south have anything ABOVE 
+    		// if the row boundary is outside the southernmost boundary 
+    		// it is false 
+    		if (column != bowColumn || row < bowRow || row >= bowRow  + length) {
+    			return false; 
+    		}
+    		
+    		//else index of the shot part on the ship row 
+    		indexShotOnShip = row - bowRow;
+    	}
+    	
+    	// boolean array of hit of the index is set to true 
+    	hit[indexShotOnShip] = true;
+    	return true;
+    	}
+    
     
     /**
      * returns true if every part of the ship has been hit and false otherwise 
      * @return
      */
     boolean isSunk() {
-    	//initialize whether the index of the boat is hit or not 
-    	boolean partHit = false;
-    	if (getShipType() != "Empty") {
-    		// iterate over every part of the ship to see if hit
-    		for () {
-    			// if part of the ship is hit
-    			if getHit() { 
-    				partHit = true;
-    			}
-    			
-    			// if that part of the ship is not hit
-    			else {
-    				partHit = false;
-    			}
-    		}
+    	 
+    	// use getHit() getter to access the private boolean hit
+    	boolean [] hitCoordinate = getHit();
+    	// create a boolean to check if every single coordinate in the ship is hit 
+    	// iterate through each coordinate of the ship to see if it is hit 
+    	// use the private boolean earlier hit to iterate to see if every part is hit 
+    	for ( int i = 0; i < hitCoordinate.length; i++) {
+    		// if ANY PART is not hit out of every one it iterates through
+    		if (!hitCoordinate[i]) {
+    			// return false 
     			return false;
     		}
-    	
+    	}
+    	// if every part is hit, return true 
+    	return true;
     }
     
     /**
@@ -215,8 +308,15 @@ public abstract class Ship {
     @Override 
     public String toString() {
     	// if sunk, return s for sunk
+    	if (isSunk()) {
+    		return "s";
+    	}
     	// if not sunk, return x for ship still there but has been hit
-    	return isSunk() ? "s" : "x";
+    	if (!isSunk()) {
+    		return "x";
+    	}
+    	System.out.println("Unexpected, ship not sunk or hit.");
+    	return null;
     }
 
 } 
