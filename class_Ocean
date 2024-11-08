@@ -2,38 +2,44 @@ package battleship;
 import java.util.Random;
 
 public class Ocean {
+	
+	/**
+	 * Used to quickly determine which ship is in any given location ??? 
+	 */
     private Ship[][] ships = new Ship[10][10]; 
+    
+	/**
+	 * The total number of shots fired by the user
+	 */
     private int shotsFired; 
+    
+	/**
+	 * The number of times a shot hit a ship
+	 */
     private int hitCount; 
+    
+	/**
+	 * The number of ships sunk (10 ships in all)
+	 */
     private int shipsSunk; 
     
     
-    // set ship types with predetermined lengths (Battleship: 4, Cruiser: 3, Destroyer: 2, Submarine: 1)
-    private static final Ship[] SHIP_TYPES = {
-        new Battleship(),
-        new Cruiser(), 
-        new Destroyer(), 
-        new Submarine(), 
-    };
+//    // set ship types with predetermined lengths (Battleship: 4, Cruiser: 3, Destroyer: 2, Submarine: 1)
+//    private static final Ship[] SHIP_TYPES = {
+//        new Battleship(),
+//        new Cruiser(), 
+//        new Destroyer(), 
+//        new Submarine(), 
+//    };
+    
     /**
      * creates an empty ocean and fills ship array with emptysea objects 
      * initialize any game variables such as how many shots have been fired 
      */
     public Ocean()  {
-    	// initialize grid 
-    	ships = new Ship[10][10];
-    	// initially no shots are fired 
-    	shotsFired = 0;
-    	// call private helper function 
-    	fillEmptySea();
-    }
-    
-    /**
-     * private helper function for the public ocean method to help fill with emptysea 
-     */
-    private void fillEmptySea() {
-    	// iterate over the row and columns,then assign emptysea to the whole grid
-    	// for each of the rows 
+    	
+    	// Fill the grid with Emptysea 
+    	//ships = new Ship[10][10]; It is initialized already.
     	for (int row = 0; row < ships.length; row ++) {
     		// for each of the column numbers corresponding to the rows 
     		for (int col = 0; col < ships[row].length; col ++) {
@@ -41,34 +47,42 @@ public class Ocean {
     			ships[row][col] = new EmptySea();
     		}
     	}
+    	
+    	// All int variable is set as 0 by default 
+    	// initially no shots are fired 	
+    	shotsFired = 0;
+ 
     }
-    
+   
     /**
-     * place 10 ships 
-     * place large ships before small ships to ensure there is space to place all ships 
-     * use random class 
-     * use printWithShips() below to check and debug 
+     * Place randomnly
      */
-   public void placeAllShipsRandomly() {
+    
+    public void placeAllShipsRandomly() {
+        
+    	
+    	Ship[] fleets = {
+                new Battleship(),        // 1 Battleship
+                new Cruiser(), new Cruiser(), // 2 Cruiser
+                new Destroyer(), new Destroyer(), new Destroyer(), // 3 Destroyer
+                new Submarine(), new Submarine(), new Submarine(), new Submarine() // 4 Submarine
+            };
+    	
     	Random random = new Random();
-    	for (Ship ship : SHIP_TYPES) {
-    		boolean shipPlaced = false;
-    		
-    		while (shipPlaced = false) {
-    			// randomly generate row index 
-    			int row = random.nextInt(10);
-    			// randomly generate column index 
-    			int column = random.nextInt(10);
-    			// ranodm generate a ship orientation 
-    			boolean horizontal = random.nextBoolean();
-    			
-    			//check if the ship is allowed to be placed at generated location 
-    			if (ship.okToPlaceShipAt(row, column, horizontal, ???)) {
-    				ship.placeShipAt(row, column, horizontal, ?????);
-                    shipPlaced = true;
-    			}
-    		}
-    	}
+        
+        for (Ship ship: fleets) {
+        	while (true) {
+                int row = random.nextInt(10);
+                int col = random.nextInt(10);
+                boolean randomOrientation = random.nextBoolean();
+
+                // Place the ship if the spot is empty and legal
+                if (ships[row][col] instanceof EmptySea && ship.okToPlaceShipAt(row, col, randomOrientation, this)) {
+                	ship.placeShipAt(row, col, randomOrientation, this);
+                	break;
+                }
+            }
+        }
     }
     
     /**
@@ -77,28 +91,34 @@ public class Ocean {
      * @param column
      * @return
      */
-   public boolean isOccupied(int row, int column) {
-    	// iterate over the int rows and columns 
-    	// if the location is occupied return true 
-    	if {
-    	return true;
-    	
-    	}
-    	// if the location is not occupied return false 
-    	else {
-    	return false;
-    	}
-    }
-    
+    public boolean isOccupied(int row, int col) {
+	  
+	   if (ships[row][col] instanceof EmptySea) {
+		   return false;
+	   }
+	   else {
+		   return true;
+	   }
+   }
     /**
      * return true if given location contains a real ship that is not sunk, false if not or sunk. 
      * @param row
      * @param column
      * @return
      */
-    boolean shootAt(int row, int column) { 
+    boolean shootAt(int row, int col) {
+        Ship targetShip = ships[row][col];
+
+        // check if the location is a real ship and is afloat
+        if (!(targetShip instanceof EmptySea) || !targetShip.isSunk()) {
+        	hitCount++;
+            return true;
+        }
+        
+        shotsFired++;
+		return false;
     }
-    
+
     /**
      * return number of shots fired in game 
      * @return
@@ -128,7 +148,7 @@ public class Ocean {
      * @return
      */
     boolean isGameOver() {
-    	
+    	return shipsSunk == 20;
     }
     
     /**
@@ -150,9 +170,33 @@ public class Ocean {
      * . means never fired upon 
      */
    public void print() {
-    	
+	   
+	   // print column index
+	   System.out.print("  "); // Space for the top-left corner
+	   for (int i = 0; i<10; i++) {
+		   System.out.print(i +" ");
+	   }
+	   
+	   System.out.println(); // move to next line
+	
+	   for (int row = 0; row < ships.length; row++) {
+		   System.out.print(row + " ");
+		   for (int col = 0; col <ships[row].length; col++) {
+			   
+			   Ship thisShip = ships[row][col];
+			   if(thisShip.isSunk() || thisShip.shootAt(row, col)) {
+				   System.out.print(thisShip);
+	            } else {
+	                System.out.print(". "); 
+	            }
+		   }
+		   System.out.println(" ");
+	   }
+		   
+	   
     }
-    
+	
+	
     /**
      * used for debugging - shows location of the ships 
      * b means battleship
@@ -162,7 +206,40 @@ public class Ocean {
      * ' ' means empty sea (single space) 
      */
     void printWithShips() {
-    	
+ 	   
+    	// print column index
+ 	   System.out.print("  "); // Space for the top-left corner
+ 	   for (int i = 0; i<10; i++) {
+ 		   System.out.print(i +" ");
+ 	   }
+ 	   
+ 	   System.out.println(); // move to next line
+ 	
+	   for (int row = 0; row < ships.length; row++) {
+		   System.out.print(row + " "); //styling , print row index and a space 
+		   
+		   for (int col = 0; col <ships[row].length; col++) {
+			   
+			   Ship thisShip = ships[row][col];
+			   
+			   if ("Battleship".equals(thisShip.getShipType())){
+				  System.out.print("b ");
+			   } 
+			   else if ("Cruiser".equals(thisShip.getShipType())){
+				  System.out.print("c ");				   
+			   }
+			   else if ("Destroyer".equals(thisShip.getShipType())){
+				  System.out.print("d ");				   
+			   }
+			   else if ("Submarine".equals(thisShip.getShipType())){
+				  System.out.print("s ");				   
+			   }
+			   else if ("EmptySea".equals(thisShip.getShipType())){
+				  System.out.print("  ");				   
+			   }
+		   }
+		   System.out.println(" ");
+	   }
     }
 
 }
