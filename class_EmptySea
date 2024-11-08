@@ -5,7 +5,7 @@ package battleship;
  */ 
 public class EmptySea extends Ship {
 			public static final int LENGTH = 1;
-			public static final String TYPE = "Empty";
+			public static final String TYPE = "empty";
 			/**
 			 * zero argument constructor, sets the length variable to 1 by calling constructor in superclass 
 			 */
