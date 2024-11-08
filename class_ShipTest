@@ -281,8 +281,20 @@ class ShipTest {
 		assertTrue(ok, "OK to place ship here.");
 		
 		//test when there is a ship and placing second ship, OK to place  
+		Ship destroyer = new Destroyer();
+		int rowD = 7;
+		int columnD = 7;
+		boolean horizontalD = false;
+		boolean okD = destroyer.okToPlaceShipAt(rowD, columnD, horizontalD, ocean);
+		assertTrue(okD, "OK to place destroyer here.");
 		
 		// test when there are two ships and placing third ship, NOT OK to place 
+		Ship cruiser = new Cruiser();
+		int rowC = 7;
+		int columnC = 8;
+		boolean horizontalC = false;
+		boolean okC = cruiser.okToPlaceShipAt(rowC, columnC, horizontalC, ocean);
+		assertTrue(okC, "NOT OK to place cruiser here, already something placed here.");
 		
 	}
 	
@@ -304,15 +316,33 @@ class ShipTest {
 		Battleship battleship2 = new Battleship();
 		row = 1;
 		column = 4;
-		horizontal = true;
+		horizontal = false;
 		boolean ok2 = battleship2.okToPlaceShipAt(row, column, horizontal, ocean);
 		assertFalse(ok2, "Not OK to place ship vertically adjacent below.");
 		
 		// test second ship placing: placing far away, OK
+		Battleship battleship3 = new Battleship();
+		row = 10;
+		column = 7;
+		horizontal = true;
+		boolean ok3 = battleship3.okToPlaceShipAt(row, column, horizontal, ocean);
+		assertFalse(ok3, "OK to place horizontal ship far below.");
 		
-		// test third ship placing: placing right next to second ship, NOT OK
+		// test third ship placing: placing right next to second ship successfully placed, NOT OK
+		Cruiser cruiser = new Cruiser();
+		row = 9;
+		column = 7;
+		horizontal = false;
+		boolean okC = cruiser.okToPlaceShipAt(row, column, horizontal, ocean);
+		assertFalse(okC, "Not OK to place vertical cruiser next to battleship3.");
 		
 		// test third ship placing: far away, OK
+		Cruiser cruiser2 = new Cruiser();
+		row = 3;
+		column = 7;
+		horizontal = true;
+		boolean okC2 = cruiser2.okToPlaceShipAt(row, column, horizontal, ocean);
+		assertFalse(okC2, "Not OK to place horizontal cruiser far from every other ship.");
 	}
 
 	@Test
@@ -332,9 +362,31 @@ class ShipTest {
 		assertEquals(battleship, ocean.getShipArray()[0][1]);
 		
 
-		//added test: test placing cruiser
+		//added test: test placing cruiser and test around it to detect ship and empty sea
+		Ship cruiser = new Cruiser();
+		int rowC = 7;
+		int columnC = 7;
+		boolean horizontalC = true;
+		cruiser.placeShipAt(rowC, columnC, horizontalC, ocean);
+		assertEquals(rowC, cruiser.getBowRow());
+		assertEquals(columnC, cruiser.getBowColumn());
+		assertTrue(cruiser.isHorizontal());
 		
-		//added test: test placing destroyer
+		assertEquals("empty", ocean.getShipArray()[6][7].getShipType());
+		assertEquals(cruiser, ocean.getShipArray()[7][6]);
+		
+		//added test: test placing destroyer and detect around it for ship and empty sea
+		Ship destroyer = new Destroyer();
+		int rowD = 10;
+		int columnD = 9;
+		boolean horizontalD = false;
+		destroyer.placeShipAt(rowD, columnD, horizontalD, ocean);
+		assertEquals(rowD, destroyer.getBowRow());
+		assertEquals(columnD, destroyer.getBowColumn());
+		assertFalse(destroyer.isHorizontal());
+		
+		assertEquals("empty", ocean.getShipArray()[9][9].getShipType());
+		assertEquals(destroyer, ocean.getShipArray()[10][8]);
 	}
 
 	@Test
@@ -351,9 +403,27 @@ class ShipTest {
 		boolean[] hitArray0 = {false, false, false, false};
 		assertArrayEquals(hitArray0, battleship.getHit());
 		
-		//added test: test shooting at submarine 
+		//added test: test shooting at submarine - false 
+		Ship submarine = new Submarine();
+		int rowS = 3;
+		int columnS = 7;
+		boolean horizontalS = true;
+		submarine.placeShipAt(rowS, columnS, horizontalS, ocean);
 		
-		// added test: test shooting at destroyer 
+		assertFalse(submarine.shootAt(4, 7));
+		boolean[] hitArray1 = {false};
+		assertArrayEquals(hitArray1, submarine.getHit());
+		
+		// added test: test shooting at destroyer - true 
+		Ship destroyer = new Destroyer();
+		int rowD = 5;
+		int columnD = 5;
+		boolean horizontalD = false;
+		destroyer.placeShipAt(rowD, columnD, horizontalD, ocean);
+		
+		assertTrue(destroyer.shootAt(5, 4));
+		boolean[] hitArray2 = {false, true};
+		assertArrayEquals(hitArray2, destroyer.getHit());
 	}
 	
 	@Test
@@ -370,10 +440,31 @@ class ShipTest {
 		assertFalse(submarine.shootAt(5, 2));
 		assertFalse(submarine.isSunk());
 		
-		//added test: test isSunk for battleship
+		//added test: test isSunk for battleship - should sink as it shoots all
+		Ship battleship = new Battleship();
+		int rowB = 8;
+		int columnB = 8;
+		boolean horizontalB = false;
+		battleship.placeShipAt(rowB, columnB, horizontalB, ocean);
+		
+		assertFalse(battleship.isSunk());
+		assertFalse(battleship.shootAt(8, 8));
+		assertFalse(battleship.shootAt(8, 7));
+		assertFalse(battleship.shootAt(8, 6));
+		assertFalse(battleship.shootAt(8, 5));
+		assertTrue(battleship.isSunk());
 		
 		//added test: test isSunk for destroyer 
+		Ship destroyer = new Destroyer();
+		int rowD = 5;
+		int columnD = 5;
+		boolean horizontalD = true;
+		destroyer.placeShipAt(rowD, columnD, horizontalD, ocean);
 		
+		assertFalse(submarine.isSunk());
+		assertFalse(submarine.shootAt(5, 5));
+		assertFalse(submarine.shootAt(4, 5));
+		assertTrue(submarine.isSunk());
 	}
 
 	@Test
@@ -390,9 +481,27 @@ class ShipTest {
 		battleship.shootAt(9, 1);
 		assertEquals("x", battleship.toString());
 		
-		//added test: test cruiser to string 
+		//added test: test cruiser to string - one shot should not sink the cruiser 
+		Ship cruiser = new Cruiser();
+		assertEquals("x", cruiser.toString());
 		
-		// added test: test destroyer to string 
+		int rowC = 2;
+		int columnC = 5;
+		boolean horizontalC = true;
+		cruiser.placeShipAt(rowC, columnC, horizontalC, ocean);
+		cruiser.shootAt(2, 5);
+		assertEquals("x", cruiser.toString());
+		
+		// added test: test submarine to string - one shot should sink the submarine
+		Ship submarine = new Submarine();
+		assertEquals("x", submarine.toString());
+		
+		int rowS = 3;
+		int columnS = 3;
+		boolean horizontalS = false;
+		submarine.placeShipAt(rowS, columnS, horizontalS, ocean);
+		submarine.shootAt(3, 3);
+		assertEquals("s", submarine.toString());
 	}
 
 }
