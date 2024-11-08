@@ -5,7 +5,7 @@ package battleship;
  */
 public class Cruiser extends Ship {
 	public static final int LENGTH = 3;
-	public static final String TYPE = "Cruiser";
+	public static final String TYPE = "cruiser";
 	
 	public Cruiser() {
 		super(LENGTH);
