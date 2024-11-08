@@ -121,14 +121,14 @@ class ShipTest {
 		
 		//added test: can cruiser be hit - both false
 		ship = new Cruiser();
-		boolean[] hits2 = new boolean[2];
+		boolean[] hits2 = new boolean[3];
 		assertArrayEquals(hits2, ship.getHit());
 		assertFalse(ship.getHit()[0]);
 		assertFalse(ship.getHit()[3]);
 		
 		// added test: can destroyer be hit - one true one false
 		ship = new Destroyer();
-		boolean[] hits3 = new boolean[4];
+		boolean[] hits3 = new boolean[2];
 		assertArrayEquals(hits3, ship.getHit());
 		assertTrue(ship.getHit()[4]);
 		assertFalse(ship.getHit()[7]);
@@ -330,8 +330,8 @@ class ShipTest {
 		
 		// test third ship placing: placing right next to second ship successfully placed, NOT OK
 		Cruiser cruiser = new Cruiser();
-		row = 9;
-		column = 7;
+		row = 10;
+		column = 8;
 		horizontal = false;
 		boolean okC = cruiser.okToPlaceShipAt(row, column, horizontal, ocean);
 		assertFalse(okC, "Not OK to place vertical cruiser next to battleship3.");
@@ -342,7 +342,7 @@ class ShipTest {
 		column = 7;
 		horizontal = true;
 		boolean okC2 = cruiser2.okToPlaceShipAt(row, column, horizontal, ocean);
-		assertFalse(okC2, "Not OK to place horizontal cruiser far from every other ship.");
+		assertTrue(okC2, "OK to place horizontal cruiser far from every other ship.");
 	}
 
 	@Test
@@ -377,7 +377,7 @@ class ShipTest {
 		
 		//added test: test placing destroyer and detect around it for ship and empty sea
 		Ship destroyer = new Destroyer();
-		int rowD = 10;
+		int rowD = 3;
 		int columnD = 9;
 		boolean horizontalD = false;
 		destroyer.placeShipAt(rowD, columnD, horizontalD, ocean);
@@ -385,8 +385,8 @@ class ShipTest {
 		assertEquals(columnD, destroyer.getBowColumn());
 		assertFalse(destroyer.isHorizontal());
 		
-		assertEquals("empty", ocean.getShipArray()[9][9].getShipType());
-		assertEquals(destroyer, ocean.getShipArray()[10][8]);
+		assertEquals("empty", ocean.getShipArray()[3][1].getShipType());
+		assertEquals(destroyer, ocean.getShipArray()[2][9]);
 	}
 
 	@Test
