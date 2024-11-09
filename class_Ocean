@@ -110,6 +110,7 @@ public class Ocean {
         // check if the location is a real ship and is afloat
         if (!(targetShip instanceof EmptySea) || !targetShip.isSunk()) {
         	hitCount++;
+            shotsFired++; // UPDATED BY HEATHER 
             return true;
         }
         
@@ -237,19 +238,19 @@ public class Ocean {
 			   
 			   Ship thisShip = ships[row][col];
 			   
-			   if ("Battleship".equals(thisShip.getShipType())){
+			   if ("battleship".equals(thisShip.getShipType())){
 				  System.out.print("b ");
 			   } 
-			   else if ("Cruiser".equals(thisShip.getShipType())){
+			   else if ("cruiser".equals(thisShip.getShipType())){
 				  System.out.print("c ");				   
 			   }
-			   else if ("Destroyer".equals(thisShip.getShipType())){
+			   else if ("destroyer".equals(thisShip.getShipType())){
 				  System.out.print("d ");				   
 			   }
-			   else if ("Submarine".equals(thisShip.getShipType())){
+			   else if ("submarine".equals(thisShip.getShipType())){
 				  System.out.print("s ");				   
 			   }
-			   else if ("Empty".equals(thisShip.getShipType())){
+			   else if ("empty".equals(thisShip.getShipType())){
 				  System.out.print("  ");				   
 			   }
 			   else {
