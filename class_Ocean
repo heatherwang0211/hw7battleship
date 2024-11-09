@@ -41,9 +41,7 @@ public class Ocean {
     	// Fill the grid with Emptysea 
     	//ships = new Ship[10][10]; It is initialized already.
     	for (int row = 0; row < ships.length; row ++) {
-    		// for each of the column numbers corresponding to the rows 
     		for (int col = 0; col < ships[row].length; col ++) {
-    			// assign the location a ship (EmptySea) 
     			ships[row][col] = new EmptySea();
     		}
     	}
@@ -55,7 +53,7 @@ public class Ocean {
     }
    
     /**
-     * Place randomnly
+     * Place 10 ships randomly
      */
     
     public void placeAllShipsRandomly() {
@@ -184,7 +182,24 @@ public class Ocean {
 		   for (int col = 0; col <ships[row].length; col++) {
 			   
 			   Ship thisShip = ships[row][col];
-			   if(thisShip.isSunk() || thisShip.shootAt(row, col)) {
+			   boolean isHit = false;
+			   
+			   // check if this location is shot at by check if it is part of a ship and hit index
+			   if (!(thisShip instanceof EmptySea)) {
+				   
+				   int hitIndex;
+				   
+				   if (thisShip.isHorizontal()) {
+					   hitIndex = thisShip.getBowColumn() - col;
+				   } else {
+					   hitIndex = thisShip.getBowRow() - row;
+				   }
+				   
+				   isHit = thisShip.getHit()[hitIndex];		      
+			   }
+			   
+			   // perform print
+			   if(thisShip.isSunk() || isHit) {
 				   System.out.print(thisShip);
 	            } else {
 	                System.out.print(". "); 
@@ -234,8 +249,11 @@ public class Ocean {
 			   else if ("Submarine".equals(thisShip.getShipType())){
 				  System.out.print("s ");				   
 			   }
-			   else if ("EmptySea".equals(thisShip.getShipType())){
+			   else if ("Empty".equals(thisShip.getShipType())){
 				  System.out.print("  ");				   
+			   }
+			   else {
+				   System.out.print(thisShip.getShipType()); //Debug helper
 			   }
 		   }
 		   System.out.println(" ");
