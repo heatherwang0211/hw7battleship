@@ -1,4 +1,5 @@
 package battleship;
+import java.util.Scanner;
 
 public class BattleshipGame {
 
@@ -10,8 +11,14 @@ public class BattleshipGame {
 		ocean.print();
 		
 		ocean.printWithShips();
-
 		
+		System.out.println("Welcome to the battleship game, enter a location to shoot at.");
+		
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Enter the row");
+		int row = scanner.nextInt();
+		System.out.println("Enter the column");
+		int column = scanner.nextInt(); 
 	}
 
 }
