@@ -306,34 +306,34 @@ class ShipTest {
 
 		//test second ship
 		Battleship battleship2 = new Battleship();
-		row = 1;
-		column = 4;
-		horizontal = false;
-		boolean ok2 = battleship2.okToPlaceShipAt(row, column, horizontal, ocean);
+		int rowB2 = 1;
+		int columnB2 = 4;
+		boolean horizontalB2 = false;
+		boolean ok2 = battleship2.okToPlaceShipAt(rowB2, columnB2, horizontalB2, ocean);
 		assertFalse(ok2, "Not OK to place ship vertically adjacent below.");
 		
 		// test second ship placing: placing far away, OK
 		Battleship battleship3 = new Battleship();
-		row = 10;
-		column = 7;
-		horizontal = true;
-		boolean ok3 = battleship3.okToPlaceShipAt(row, column, horizontal, ocean);
+		int rowB3 = 10;
+		int columnB3 = 7;
+		boolean horizontalB3 = true;
+		boolean ok3 = battleship3.okToPlaceShipAt(rowB3, columnB3, horizontalB3, ocean);
 		assertFalse(ok3, "OK to place horizontal ship far below.");
 		
 		// test third ship placing: placing right next to second ship successfully placed, NOT OK
 		Cruiser cruiser = new Cruiser();
-		row = 10;
-		column = 8;
-		horizontal = false;
-		boolean okC = cruiser.okToPlaceShipAt(row, column, horizontal, ocean);
+		int rowC = 10;
+		int columnC = 8;
+		boolean horizontalC = false;
+		boolean okC = cruiser.okToPlaceShipAt(rowC, columnC, horizontalC, ocean);
 		assertFalse(okC, "Not OK to place vertical cruiser next to battleship3."); //failing - expected false but was true
 		
 		// test third ship placing: far away, OK
 		Cruiser cruiser2 = new Cruiser();
-		row = 3;
-		column = 7;
-		horizontal = true;
-		boolean okC2 = cruiser2.okToPlaceShipAt(row, column, horizontal, ocean);
+		int rowC2 = 3;
+		int columnC2 = 7;
+		boolean horizontalC2 = true;
+		boolean okC2 = cruiser2.okToPlaceShipAt(rowC2, columnC2, horizontalC2, ocean);
 		assertTrue(okC2, "OK to place horizontal cruiser far from every other ship.");
 	}
 
@@ -404,7 +404,7 @@ class ShipTest {
 		
 		assertTrue(submarine.shootAt(3, 7));
 		boolean[] hitArray1 = {true};
-		assertArrayEquals(hitArray1, submarine.getHit());
+		assertArrayEquals(hitArray1, submarine.getHit()); // failing 
 		
 		// added test: test shooting at destroyer - true 
 		Ship destroyer = new Destroyer();
