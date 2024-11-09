@@ -110,7 +110,7 @@ public class Ocean {
         // check if the location is a real ship and is afloat
         if (!(targetShip instanceof EmptySea) || !targetShip.isSunk()) {
         	hitCount++;
-            shotsFired++; // UPDATED BY HEATHER 
+            //shotsFired++; // does this count as shots fired too because shot?  - HEATHER
             return true;
         }
         
