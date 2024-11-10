@@ -51,24 +51,11 @@ public class BattleshipGame {
 		int targetCol = target[1];
 		Ship targetShip = this.ships[targetRow][targetCol];
 		
-		// if the target is a ship, call a shootAt method from Ship class and notify user
-		if(ocean.shootAt(targetRow, targetCol)) {
-			
-			boolean hitResult = targetShip.shootAt(targetRow, targetCol);
-			
-			// System.out.println(targetShip.isHorizontal); // debug
-			// System.out.println(hitResult); // debug
-			
-			System.out.println("Hit.");	
-			if(hitResult && targetShip.isSunk()) {
-				System.out.println("You just sank a ship - " + targetShip.getShipType());
-			}
-		}
-		else {
-			System.out.println("Miss.");
-		}
+		ocean.shootAt(targetRow, targetCol);
 		
-		System.out.println("hit array for this cell is" + targetShip.getHit()[0]);//debug
+		System.out.println("Debug: in hit array, the first boolean is " + targetShip.getHit()[0]);//debug
+		System.out.println("Debug: isSunk for this ship is" + targetShip.isSunk());//debug
+		System.out.println("Debug: shipsSunk" + ocean.getShipsSunk());//debug
 	}
 	
 	/**
@@ -82,14 +69,14 @@ public class BattleshipGame {
 		
 		game.ocean.placeAllShipsRandomly();
 		
-		System.out.println("Welcome to the battleship game, below is your 10*10 ocean.");
+		System.out.println("Welcome to the battleship game, below is your 10x10 ocean.");
 		System.out.println(" ");
 
 		while(!(game.ocean.isGameOver())){
 			
 			game.ocean.printWithShips(); //debug
 			game.ocean.print();
-			game.makeOneShot();		
+			game.makeOneShot();	
 		}
 		
 		System.out.println("Game over, your score is" + game.ocean.getShotsFired());
