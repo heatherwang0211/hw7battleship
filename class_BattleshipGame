@@ -1,24 +1,98 @@
 package battleship;
 import java.util.Scanner;
-
 public class BattleshipGame {
-
-	public static void main(String[] args) {
-		Ocean ocean = new Ocean();
+	
+	private Scanner scan = new Scanner(System.in);
+	
+	private Ocean ocean = new Ocean();
+	
+	private Ship[][] ships = ocean.getShipArray();
+	
+	/**
+	 * get target input from user
+	 * @return
+	 */
+	public int[] inputTarget() {
 		
-		ocean.placeAllShipsRandomly();
+		int row;
+		int col;
 		
-		ocean.print();
-		
-		ocean.printWithShips();
-		
-		System.out.println("Welcome to the battleship game, enter a location to shoot at.");
-		
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Enter the row");
-		int row = scanner.nextInt();
-		System.out.println("Enter the column");
-		int column = scanner.nextInt(); 
+		while(true) {
+			System.out.print("Enter row, column: ");
+			String userInput = scan.nextLine();
+			String[] userInputArray = userInput.split(",");
+			
+           try {
+               row = Integer.parseInt(userInputArray[0].trim());
+               col = Integer.parseInt(userInputArray[1].trim());
+              
+               if(row >= 0 && row <= 9 && col <= 9 && col >=0 ) {
+               	int[] result = {row, col};
+               	return result;
+               }
+               else {
+                   System.out.println("Please enter valid range between 0 to 9.");
+               }
+              
+           } catch (NumberFormatException e) {
+               System.out.println("Please enter two integers separated by a comma.");
+           }
+		}	
 	}
+	
+	/**
+	 * perform a shot at a given location
+	 */
+	public void makeOneShot() {
+		
+		// get target Ship, row and col
+		int[] target = this.inputTarget();
+		int targetRow = target[0];
+		int targetCol = target[1];
+		Ship targetShip = this.ships[targetRow][targetCol];
+		
+		// if the target is a ship, call a shootAt method from Ship class and notify user
+		if(ocean.shootAt(targetRow, targetCol)) {
+			
+			boolean hitResult = targetShip.shootAt(targetRow, targetCol);
+			
+			// System.out.println(targetShip.isHorizontal); // debug
+			// System.out.println(hitResult); // debug
+			
+			System.out.println("Hit.");	
+			if(hitResult && targetShip.isSunk()) {
+				System.out.println("You just sank a ship - " + targetShip.getShipType());
+			}
+		}
+		else {
+			System.out.println("Miss.");
+		}
+		
+		System.out.println("hit array for this cell is" + targetShip.getHit()[0]);//debug
+	}
+	
+	/**
+	 * main method for game control
+	 * @param args
+	 */
+	
+	public static void main(String[] args) {
+		
+		BattleshipGame game = new BattleshipGame();
+		
+		game.ocean.placeAllShipsRandomly();
+		
+		System.out.println("Welcome to the battleship game, below is your 10*10 ocean.");
+		System.out.println(" ");
 
+		while(!(game.ocean.isGameOver())){
+			
+			game.ocean.printWithShips(); //debug
+			game.ocean.print();
+			game.makeOneShot();		
+		}
+		
+		System.out.println("Game over, your score is" + game.ocean.getShotsFired());
+	}
 }
+
