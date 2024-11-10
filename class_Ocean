@@ -4,7 +4,7 @@ import java.util.Random;
 public class Ocean {
 	
 	/**
-	 * Used to quickly determine which ship is in any given location ??? 
+	 * Used to quickly determine which ship is in any given location 
 	 */
     private Ship[][] ships = new Ship[10][10]; 
     
@@ -42,7 +42,9 @@ public class Ocean {
     	//ships = new Ship[10][10]; It is initialized already.
     	for (int row = 0; row < ships.length; row ++) {
     		for (int col = 0; col < ships[row].length; col ++) {
-    			ships[row][col] = new EmptySea();
+          ships[row][col] = new EmptySea();
+    			ships[row][col].placeShipAt(row, col, false, this);
+
     		}
     	}
     	
@@ -99,23 +101,25 @@ public class Ocean {
 	   }
    }
     /**
-     * return true if given location contains a real ship that is not sunk, false if not or sunk. 
+     * return true if given location contains a real ship that is not sunk. 
      * @param row
      * @param column
      * @return
      */
     boolean shootAt(int row, int col) {
-        Ship targetShip = ships[row][col];
+        
+    	shotsFired++;
+    	
+    	Ship targetShip = ships[row][col];
 
         // check if the location is a real ship and is afloat
-        if (!(targetShip instanceof EmptySea) || !targetShip.isSunk()) {
+        if (!(targetShip instanceof EmptySea) && !targetShip.isSunk()) {
         	hitCount++;
-            //shotsFired++; // does this count as shots fired too because shot?  - HEATHER
             return true;
         }
-        
-        shotsFired++;
-		return false;
+        else {
+        	return false;
+        }
     }
 
     /**
@@ -147,7 +151,24 @@ public class Ocean {
      * @return
      */
     boolean isGameOver() {
-    	return shipsSunk == 20;
+ 	   for (int row = 0; row < ships.length; row++) {
+
+		   for (int col = 0; col <ships[row].length; col++) {
+			   
+			   Ship thisShip = ships[row][col];
+			   
+			   if(thisShip.isSunk()) {
+				   shipsSunk++;
+			   }	
+		   }
+ 	   }
+    	
+		if (shipsSunk == 20) {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
     }
     
     /**
@@ -184,9 +205,10 @@ public class Ocean {
 			   
 			   Ship thisShip = ships[row][col];
 			   boolean isHit = false;
+			   boolean isShip = !(thisShip instanceof EmptySea);
 			   
 			   // check if this location is shot at by check if it is part of a ship and hit index
-			   if (!(thisShip instanceof EmptySea)) {
+			   if (isShip) {
 				   
 				   int hitIndex;
 				   
@@ -195,13 +217,23 @@ public class Ocean {
 				   } else {
 					   hitIndex = thisShip.getBowRow() - row;
 				   }
-				   
 				   isHit = thisShip.getHit()[hitIndex];		      
 			   }
+			   else {
+				   isHit = thisShip.getHit()[0];
+			   }
+			   
+//			   // perform print
+//			   if ((thisShip.isSunk()) || isHit) {
+//					System.out.print(thisShip);  
+//	            } else {
+//	                System.out.print(". "); 
+//	            }
 			   
 			   // perform print
-			   if(thisShip.isSunk() || isHit) {
+			   if((isShip && thisShip.isSunk()) || isHit) {
 				   System.out.print(thisShip);
+           System.out.print(" ");
 	            } else {
 	                System.out.print(". "); 
 	            }
@@ -252,9 +284,6 @@ public class Ocean {
 			   }
 			   else if ("empty".equals(thisShip.getShipType())){
 				  System.out.print("  ");				   
-			   }
-			   else {
-				   System.out.print(thisShip.getShipType()); //Debug helper
 			   }
 		   }
 		   System.out.println(" ");
