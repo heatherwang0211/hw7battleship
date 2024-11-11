@@ -278,7 +278,7 @@ public abstract class Ship {
     		// OR bc horizontal, extends across several columns, face east
     		// if the column shot at is bigger than column bigger than column
     		// then it is false because it cannot be shot at 
-    		if (row != bowRow || column > bowColumn || column <= bowColumn - (length - 1) ) {
+    		if (row != bowRow || column > bowColumn || column < bowColumn - (length - 1) ) {
     			return false; 
     		} 
     		 
@@ -292,7 +292,7 @@ public abstract class Ship {
     		// then check if the vertical ships facing south have anything ABOVE 
     		// if the row boundary is outside the southernmost boundary 
     		// it is false 
-    		if (column != bowColumn || row > bowRow || row <= bowRow  - (length - 1)) {
+    		if (column != bowColumn || row > bowRow || row < bowRow  - (length - 1)) {
     			return false; 
     		}  
     		indexShotOnShip = bowRow - row;
