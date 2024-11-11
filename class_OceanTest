@@ -121,6 +121,18 @@ class OceanTest {
 		
 		//TODO
 		//More tests
+
+    // test destroyer
+    assertTrue(ocean.isOccupied(0, 0));  
+
+    // place an EmptySea		
+    Ship emptysea = new EmptySea ();
+		row = 3;
+		column = 1;
+		horizontal = false;
+		emptysea.placeShipAt(row, column, horizontal, ocean);
+		
+		assertFalse(ocean.isOccupied(3, 1));
 	}
 
 	@Test
@@ -140,6 +152,50 @@ class OceanTest {
 		
 		//TODO
 		//More tests
+
+    // shot an EmptySea
+    Ship emptysea = new EmptySea ();
+		row = 3;
+		column = 1;
+		horizontal = false;
+		emptysea.placeShipAt(row, column, horizontal, ocean);
+		
+		assertFalse(ocean.shootAt(3, 1));
+		assertFalse(emptysea.isSunk());
+
+    // sank a Cruiser
+		Cruiser cruiser = new Cruiser();
+		row = 2;
+		column = 5;
+		horizontal = false;
+		cruiser.placeShipAt(row, column, horizontal, ocean);
+
+		assertTrue(ocean.shootAt(2, 5));
+    assertFalse(cruiser.isSunk());		
+		assertTrue(ocean.shootAt(1, 5));
+    assertFalse(cruiser.isSunk());
+    assertTrue(ocean.shootAt(0, 5));
+		assertTrue(cruiser.isSunk());
+
+    // shot at the same location twice, then sank the ship
+    Destroyer destroyerTwo = new Destroyer();
+		row = 1;
+		column = 5;
+    horizontal = true;
+		destroyerTwo.placeShipAt(row, column, horizontal, ocean);
+
+    assertTrue(ocean.shootAt(1,5)); // first shot
+    assertFalse(destroyerTwo.isSunk());	
+
+    assertTrue(ocean.shootAt(1,5)); // return true if shooting at same location
+    assertFalse(destroyerTwo.isSunk());	
+
+    assertTrue(ocean.shootAt(1,4)); // third shot to sink the ship
+    assertTrue(destroyerTwo.isSunk());	
+
+    assertFalse(ocean.shootAt(1,4)); // return false if shooting at same location when the ship is sunk
+    assertTrue(destroyerTwo.isSunk());	
+
 	}
 
 	@Test
@@ -172,6 +228,16 @@ class OceanTest {
 		
 		//TODO
 		//More tests
+
+    //shoot at same location twice
+		assertFalse(ocean.shootAt(5, 6));
+		assertFalse(ocean.shootAt(5, 6));
+		assertEquals(8, ocean.getShotsFired());
+
+    //shoot a sunk ship
+		assertFalse(ocean.shootAt(1, 5));
+		assertTrue(destroyer.isSunk());
+		assertEquals(9, ocean.getShotsFired());
 	}
 
 	@Test
@@ -189,6 +255,24 @@ class OceanTest {
 		
 		//TODO
 		//More tests
+
+    // hit same location twice
+    assertTrue(ocean.shootAt(1, 5));
+    assertEquals(2, ocean.getHitCount());
+
+    // hit a sunk ship again
+    assertTrue(ocean.shootAt(0, 5)); //sink the ship
+    assertTrue(destroyer.isSunk());
+    assertEquals(3, ocean.getHitCount());
+    
+    assertFalse(ocean.shootAt(0, 5)); //hit ship again
+    assertTrue(destroyer.isSunk());
+    assertEquals(4, ocean.getHitCount());
+
+    // shoot an emptySea
+    assertFalse(ocean.shootAt(0, 0)); //hit ship again
+    assertEquals(4, ocean.getHitCount());
+
 	}
 	
 	@Test
@@ -207,6 +291,37 @@ class OceanTest {
 		
 		//TODO
 		//More tests
+
+    // sink a ship
+    assertTrue(ocean.shootAt(0, 5));
+		assertTrue(destroyer.isSunk());
+		assertEquals(2, ocean.getHitCount());
+		assertEquals(1, ocean.getShipsSunk());
+
+    // shoot a sunk ship
+    assertFalse(ocean.shootAt(0, 5));
+		assertTrue(destroyer.isSunk());
+		assertEquals(3, ocean.getHitCount());
+		assertEquals(1, ocean.getShipsSunk());
+
+    // shoot an EmptySea
+    assertFalse(ocean.shootAt(0, 0));
+		assertEquals(3, ocean.getHitCount());
+		assertEquals(1, ocean.getShipsSunk());
+
+    // place another ship and sink it
+    Submarine submarine = new Submarine();
+		row = 2;
+		column = 3;
+		horizontal = false;
+		submarine.placeShipAt(row, column, horizontal, ocean);
+		
+    assertEquals(3, ocean.getHitCount());
+		assertEquals(1, ocean.getShipsSunk());
+
+    assertTrue(ocean.shootAt(2, 3));
+    assertEquals(4, ocean.getHitCount());
+		assertEquals(2, ocean.getShipsSunk());
 	}
 
 	@Test
@@ -220,6 +335,37 @@ class OceanTest {
 		
 		//TODO
 		//More tests
+
+    // place an destroyer and a submarine
+    Destroyer destroyer = new Destroyer();
+		int row = 1;
+		int column = 5;
+		boolean horizontal = false;
+		destroyer.placeShipAt(row, column, horizontal, ocean);
+    
+    Submarine submarine = new Submarine();
+		row = 2;
+		column = 3;
+		horizontal = false;
+		submarine.placeShipAt(row, column, horizontal, ocean);
+
+    assertEquals("empty", shipArray[0][0].getShipType());
+    assertEquals("destroyer", shipArray[1][5].getShipType());
+		assertEquals("destroyer", shipArray[0][5].getShipType());
+		assertEquals("submarine", shipArray[2][3].getShipType());
+
+    assertFalse(shipArray[1][5].isSunk());
+    assertFalse(shipArray[0][5].isSunk());
+    assertFalse(shipArray[2][3].isSunk());
+
+    // sink a ship and check if it is reflected in the shipArray
+  
+    assertTrue(ocean.shootAt(2, 3));
+    assertEquals(1, ocean.getHitCount());
+		assertEquals(1, ocean.getShipsSunk());
+
+		assertEquals("submarine", shipArray[2][3].getShipType());
+    assertTrue(shipArray[2][3].isSunk());
 	}
 
 }
