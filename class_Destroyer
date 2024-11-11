@@ -1,15 +1,25 @@
+/**
+ * This homework was a collaborative effort between Heather Wang and Yiju Liu
+ * Codio usernames: 
+ * Heather Wang: HWANG724859401
+ * Yiju Liu: YLIU286091829
+ */
+ 
 package battleship;
 
 /**
- * describes a ship of length 2
+ * destroyer: describes a ship of length 2, and has the ship type 
  */
 public class Destroyer extends Ship {
 	public static final int LENGTH = 2;
 	public static final String TYPE = "destroyer";
 	
+  // destroyer length 
 	public Destroyer() {
 		super(LENGTH);
 }
+
+  // override to get destroyer ship type 
 	@Override
 	public String getShipType() {
 		return TYPE;
