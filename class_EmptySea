@@ -1,50 +1,62 @@
+/**
+ * This homework was a collaborative effort between Heather Wang and Yiju Liu
+ * Codio usernames: 
+ * Heather Wang: HWANG724859401
+ * Yiju Liu: YLIU286091829
+ */
+ 
 package battleship;
 
 /**
- * describes a part of the ocean that is empty 
+ * empty sea: describes a part of the ocean that is empty
+ * it has a length of 1 on the game grid, cannot be shot at, cannot be sunk 
+ * it holds information about whether this place on the game grid has been shot at 
  */ 
 public class EmptySea extends Ship {
 			public static final int LENGTH = 1;
 			public static final String TYPE = "empty";
+
 			/**
 			 * zero argument constructor, sets the length variable to 1 by calling constructor in superclass 
 			 */
 			public EmptySea() {
 				super(LENGTH);
 			}
+
 			/**
 			 * overrides shootAt inherited from ship, return false because nothing was hit 
+       * update the hit array to be true
 			 */
-	        @Override 
-	        boolean shootAt(int row, int column) {
-	        	boolean[] hit =this.getHit();
-	        	hit[0] = true; 
-	        	
-	        	return false;
-	        }
+      @Override 
+      boolean shootAt(int row, int column) {
+        boolean[] hit =this.getHit();
+        hit[0] = true; 
+        
+        return false;
+      }
 	        
-	        /**
-	         * overrides isSunk inherited from Ship, return false to indicate that you did not sink anything
-	         */
-	        @Override 
-	        boolean isSunk() {
-	        	return false;
-	        }
+      /**
+        * overrides isSunk inherited from Ship, return false to indicate that you did not sink anything
+        */
+      @Override 
+      boolean isSunk() {
+        return false;
+      }
 	        
-	        /**
-	         * return single character "-" to use in ocean's print method 
-	         */
-	        @Override 
-	        public String toString() {
-	        	return "-";
-	        }
-	        
-	        /**
-	         * returns battleship, cruiser, destroyer or battleship 
-	         * this will return the string empty because the sea is empty 
-	         */
-	        @Override 
-	        public String getShipType() {
-	        	return TYPE;
-	        }
+      /**
+        * return single character "-" to use in ocean's print method to indicate empty sea 
+        */
+      @Override 
+      public String toString() {
+        return "-";
+      }
+      
+      /**
+        * returns the ship type 
+        * this will return the string empty because the ship type is empty sea 
+        */
+      @Override 
+      public String getShipType() {
+        return TYPE;
+      }
 	}
