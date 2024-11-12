@@ -87,7 +87,7 @@ public class BattleshipGame {
 
 		while(!(game.ocean.isGameOver())){
 			
-			game.ocean.printWithShips(); //debug
+			// game.ocean.printWithShips(); //debug
 			game.ocean.print();
 			game.makeOneShot();	
 		}
