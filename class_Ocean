@@ -1,3 +1,9 @@
+/**
+ * This homework was a collaborative effort between Heather Wang and Yiju Liu
+ * Codio usernames: 
+ * Heather Wang: HWANG724859401
+ * Yiju Liu: YLIU286091829
+ */
 package battleship;
 import java.util.Random;
 
@@ -23,20 +29,11 @@ public class Ocean {
 	 */
     private int shipsSunk; 
     
-    
-//    // set ship types with predetermined lengths (Battleship: 4, Cruiser: 3, Destroyer: 2, Submarine: 1)
-//    private static final Ship[] SHIP_TYPES = {
-//        new Battleship(),
-//        new Cruiser(), 
-//        new Destroyer(), 
-//        new Submarine(), 
-//    };
-    
     /**
      * creates an empty ocean and fills ship array with emptysea objects 
      * initialize any game variables such as how many shots have been fired 
      */
-    public Ocean()  {
+    Ocean()  {
     	
     	// Fill the grid with EmptySea 
     	//ships = new Ship[10][10]; It is initialized already.
@@ -48,19 +45,17 @@ public class Ocean {
     		}
     	}
     	
-    	// All int variable is set as 0 by default 
-    	// initially no shots are fired 	
+    	// initialize variables 	
     	shotsFired = 0;
- 
+      shipsSunk = 0;
+      hitCount = 0;
     }
    
     /**
-     * Place 10 ships randomly
+     * Create 10 ships and place the 10 ships randomly
      */
-    
-    public void placeAllShipsRandomly() {
-        
-    	
+    void placeAllShipsRandomly() {
+        	
     	Ship[] fleets = {
                 new Battleship(),        // 1 Battleship
                 new Cruiser(), new Cruiser(), // 2 Cruiser
@@ -70,19 +65,19 @@ public class Ocean {
     	
     	Random random = new Random();
         
-        for (Ship ship: fleets) {
-        	while (true) {
-                int row = random.nextInt(10);
-                int col = random.nextInt(10);
-                boolean randomOrientation = random.nextBoolean();
+      for (Ship ship: fleets) {
+        while (true) { //Go to next ship in the fleets until the current ship is placed
+              int row = random.nextInt(10);
+              int col = random.nextInt(10);
+              boolean randomOrientation = random.nextBoolean();
 
-                // Place the ship if the spot is empty and legal
-                if (ships[row][col] instanceof EmptySea && ship.okToPlaceShipAt(row, col, randomOrientation, this)) {
-                	ship.placeShipAt(row, col, randomOrientation, this);
-                	break;
-                }
-            }
-        }
+              // Place the ship if the spot is empty and legal
+              if (ships[row][col] instanceof EmptySea && ship.okToPlaceShipAt(row, col, randomOrientation, this)) {
+                ship.placeShipAt(row, col, randomOrientation, this);
+                break;
+              }
+          }
+      }
     }
     
     /**
@@ -91,7 +86,7 @@ public class Ocean {
      * @param column
      * @return
      */
-    public boolean isOccupied(int row, int col) {
+     boolean isOccupied(int row, int col) {
 	  
 	   if (ships[row][col] instanceof EmptySea) {
 		   return false;
@@ -108,7 +103,7 @@ public class Ocean {
      */
     boolean shootAt(int row, int col) {
         
-    	shotsFired++;
+    	shotsFired++; // increment shotsFired when this method is called
     	Ship targetShip = ships[row][col];
 
     	// conduct the shot if not sunk
@@ -132,7 +127,8 @@ public class Ocean {
     		}
     	}
     	
-    	// if it is sunk, a real ship is hit, hitCount++
+    	// if it is sunk, a real ship is hit, hitCount++, and return false
+      // no need to call shootAt method from Ship class as shooting a sunck ship doesn't cause impact to that ship object 
         else {
         	hitCount++;
         	System.out.println("Hit.");
@@ -176,9 +172,9 @@ public class Ocean {
      * return the 10x10 array of ships, take Ocean parameter and need to be able to look at the contents of this array 
      * placeShipAt() method needs to modify this. 
      * allow methods in one class to directly access instance var in another class - not ideal but no alternative 
-     * @return
+     * @return the 10x10 array of ships
      */
-   public Ship[][]getShipArray() {
+    Ship[][] getShipArray() {
     	return ships;
     }
     
@@ -190,7 +186,7 @@ public class Ocean {
      * s means sunken ship 
      * . means never fired upon 
      */
-   public void print() {
+    void print() {
 	   
 	   // print column index
 	   System.out.print("  "); // Space for the top-left corner
