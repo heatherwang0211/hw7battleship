@@ -1,24 +1,37 @@
+/**
+ * This homework was a collaborative effort between Heather Wang and Yiju Liu
+ * Codio usernames: 
+ * Heather Wang: HWANG724859401
+ * Yiju Liu: YLIU286091829
+ */
+ 
 package battleship;
 import java.util.Scanner;
 public class BattleshipGame {
 	
-	private Scanner scan = new Scanner(System.in);
 	
+	/**
+	 * Create instance of ocean
+	 */
 	private Ocean ocean = new Ocean();
 	
+	/**
+	 * get the ships from the instance of ocean
+	 */
 	private Ship[][] ships = ocean.getShipArray();
 	
 	/**
-	 * get target input from user
+	 * Get target input from user
 	 * @return
 	 */
-	public int[] inputTarget() {
+	int[] inputTarget() {
 		
+		Scanner scan = new Scanner(System.in);
 		int row;
 		int col;
 		
 		while(true) {
-			System.out.print("Enter row, column: ");
+			System.out.print("Enter row, column: "); // expected input is like 2,3
 			String userInput = scan.nextLine();
 			String[] userInputArray = userInput.split(",");
 			
@@ -34,7 +47,7 @@ public class BattleshipGame {
                    System.out.println("Please enter valid range between 0 to 9.");
                }
               
-           } catch (NumberFormatException e) {
+           } catch (ArrayIndexOutOfBoundsException e) {
                System.out.println("Please enter two integers separated by a comma.");
            }
 		}	
@@ -43,7 +56,7 @@ public class BattleshipGame {
 	/**
 	 * perform a shot at a given location
 	 */
-	public void makeOneShot() {
+	void makeOneShot() {
 		
 		// get target Ship, row and col
 		int[] target = this.inputTarget();
@@ -53,13 +66,13 @@ public class BattleshipGame {
 		
 		ocean.shootAt(targetRow, targetCol);
 		
-		System.out.println("Debug: in hit array, the first boolean is " + targetShip.getHit()[0]);//debug
-		System.out.println("Debug: isSunk for this ship is" + targetShip.isSunk());//debug
-		System.out.println("Debug: shipsSunk" + ocean.getShipsSunk());//debug
+//		System.out.println("Debug: in hit array, the first boolean is " + targetShip.getHit()[0]);//debug
+//		System.out.println("Debug: isSunk for this ship is" + targetShip.isSunk());//debug
+//		System.out.println("Debug: shipsSunk" + ocean.getShipsSunk());//debug
 	}
 	
 	/**
-	 * main method for game control
+	 * main method for game control. Human shots at each location. Game over until all of the 10 ships are sunk.
 	 * @param args
 	 */
 	
@@ -82,4 +95,3 @@ public class BattleshipGame {
 		System.out.println("Game over, your score is" + game.ocean.getShotsFired());
 	}
 }
-
