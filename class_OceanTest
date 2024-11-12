@@ -1,3 +1,9 @@
+/**
+ * This homework was a collaborative effort between Heather Wang and Yiju Liu
+ * Codio usernames: 
+ * Heather Wang: HWANG724859401
+ * Yiju Liu: YLIU286091829
+ */
 package battleship;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,7 +111,7 @@ class OceanTest {
 	@Test
 	void testIsOccupied() {
 
-		Destroyer destroyer = new Destroyer();
+		Destroyer destroyer = new Destroyer(); //stand alone object
 		int row = 1;
 		int column = 5;
 		boolean horizontal = false;
