@@ -1,0 +1,248 @@
+package roles;
+
+import java.util.ArrayList;
+
+import courses.Course;
+import files.FileInfoReader;
+
+/*
+ * This class specifies how to create a Student based off of the User abstract class
+ */
+public class Student extends User {
+
+	private static String STUDENT_ROLE = "student"; // the role of a student will always be a "student"
+	private ArrayList<Course> studentCourses;
+	private ArrayList<String> studentClassTimes;
+	private ArrayList<Double> studentGrades;
+
+	public Student(String username, String password, String name, String id) {
+		super(STUDENT_ROLE, username, password, name, id);
+		this.studentCourses = new ArrayList<>();
+		this.studentClassTimes = new ArrayList<>();
+		this.studentGrades = new ArrayList<>();
+	}
+
+	/*
+	 * Getters & Setters ============================================
+	 */
+
+	/**
+	 * Print the course info of the student's courses
+	 * 
+	 * @return the courses the student is enrolled in
+	 */
+	public void printCourses() {
+		for (Course course : studentCourses) {
+			System.out.println(course); // @heather fyi
+		}
+	}
+
+	/**
+	 * Prints all of the courses in the student's academic plan
+	 */
+	public void printAllStudentCourseInfo() {
+		System.out.println("See below for the professor's course information: ");
+		for (Course course : studentCourses) {
+			course.toString(); // @Zane updated from showCourseInfo to toString()
+		}
+	}
+
+	/**
+	 * Returns the editable list of the courses for the student
+	 * 
+	 * @return the courses the student is enrolled in
+	 */
+	public ArrayList<Course> getEditableCourses() {
+
+		return studentCourses;
+	}
+
+	/**
+	 * Returns a viewable, but not returnable list of the class timetables
+	 * 
+	 * @return class times
+	 */
+	public ArrayList<String> viewStudentClassTimes() {
+		ArrayList<String> returnableTimetable = new ArrayList<>(studentClassTimes);
+		return returnableTimetable;
+	}
+
+	/*
+	 * setStudentCoursesList is to be used by the Admin class in case they need to
+	 * overwrite all the courses a student is enrolled in
+	 */
+	public void setStudentCoursesList(ArrayList<Course> newCourses) {
+		this.studentCourses = newCourses;
+	}
+
+	/*
+	 * Core Methods ============================================
+	 */
+
+	public void addCourse(String courseID, ArrayList<Course> coursesCatalog) {
+		// Validate course code format using regex
+		String courseCodeString = Course.cleanCourseName(courseID);
+		String regex = "([a-zA-Z]{3})(\\d{3})";
+		if (!courseCodeString.matches(regex)) {
+			System.out.println(
+					"Invalid course code format. Please use the format of 3 letters followed by 3 digits (e.g., CIT591).");
+			return;
+		}
+
+		// Check if the course already exists in the student's schedule
+		for (Course course : studentCourses) {
+			if (course.getCourseID().equals(courseCodeString)) {
+				System.out.println(courseCodeString + " is already present in the student's schedule.");
+				return;
+			}
+		}
+
+		// Grab the course object itself
+		Course courseToAdd = getCourseObject(courseCodeString, coursesCatalog);
+		if (courseToAdd == null) {
+			System.out.println(courseCodeString + " was not found in the catalog and could not be added.");
+			return;
+		}
+
+		// Checking for schedule conflicts
+		try {
+			if (checkScheduleConflict(courseCodeString, studentCourses, coursesCatalog)) {
+				System.out.println(
+						"Cannot add " + courseCodeString + " due to a schedule conflict with the existing schedule.");
+				for (Course c : studentCourses) {
+					System.out.println("- " + c);
+				}
+				return;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Add the course to the student's schedule
+		studentCourses.add(courseToAdd);
+
+		// Add a placeholder for the student's grade
+		studentGrades.add(null);
+
+		System.out.println(courseCodeString + " has been successfully added. Current course list:");
+		for (Course course : studentCourses) {
+			System.out.println("- " + course);
+		}
+	}
+
+	/**
+	 * removeAStudentCourse adds a course to the student's course list
+	 * 
+	 * @param courseCode
+	 */
+	public void removeAStudentCourse(String courseCode) {
+		String cleanedCourseCode = Course.cleanCourseName(courseCode); // get the cleaned course name
+
+		// Find the Course object by its course ID
+		Course courseToRemove = null; // start with a null value and then locate the course object to remove
+		for (Course course : studentCourses) {
+			if (course.getCourseID().equals(cleanedCourseCode)) {
+				courseToRemove = course; // exit the loop once we have a the course in consideration
+				break;
+			}
+		}
+
+		// If the course is not found, print a message and return
+		if (courseToRemove == null) {
+			System.out.println(cleanedCourseCode
+					+ " is not in the student's current academic plan and thus cannot be removed. No action taken.");
+			return;
+		}
+
+		// Remove the course and its corresponding grade
+		int targetIndex = studentCourses.indexOf(courseToRemove);
+		studentCourses.remove(courseToRemove); // Remove the course itself
+		studentGrades.remove(targetIndex); // Remove the corresponding grade
+		System.out.println(cleanedCourseCode
+				+ " has been removed from the student's academic plan. See below for their current course list:");
+		for (Course course : studentCourses) {
+			System.out.println("- " + course);
+		}
+	}
+
+	/**
+	 * Gets a grade for the a given course in the student's course list
+	 * 
+	 * @param courseCode
+	 * @param grade
+	 * @return the grade of the course for a given student
+	 */
+	public Double getGrade(String courseCode) {
+		String courseCodeString = Course.cleanCourseName(courseCode);
+		Course courseToAdd = getCourseObject(courseCodeString, studentCourses); //
+		int targetIndex = studentCourses.indexOf(courseToAdd);
+		Double returnGrade = studentGrades.get(targetIndex);
+		System.out.println("Grade: " + returnGrade);
+		return returnGrade;
+	}
+
+	/**
+	 * Sets a grade for the a given course in the student's course list
+	 * 
+	 * @param courseCode
+	 * @param grade
+	 */
+	public void setGrade(String courseCode, double grade, ArrayList<Course> studentCourses) {
+		Course course = getCourseObject(courseCode, studentCourses); // get the course object
+		if (course == null) {
+			System.out.println("Course " + courseCode + " not found."); // if the course is not found - state that it is
+																		// not found
+			return;
+		}
+
+		int index = studentCourses.indexOf(course);
+		if (index == -1) { // return statement if the course is not in the schedule
+			System.out.println("Course " + courseCode + " is not in the student's schedule.");
+			return;
+		}
+
+		studentGrades.set(index, grade); // update the student's grade
+		System.out.println("Grade for " + courseCode + " has been set to " + grade + ".");
+	}
+
+	/**
+	 * This method turns a given numerical grade into a letter grade
+	 * 
+	 * @param grade
+	 * @return letter grade as a string
+	 */
+	public String gradeToLetter(double grade) {
+		if (grade >= 90) {
+			return "A";
+		}
+		if (grade >= 80 && grade < 90) {
+			return "B";
+		}
+		if (grade >= 70 && grade < 80) {
+			return "C";
+		}
+		if (grade >= 60 && grade < 70) {
+			return "D";
+		} else {
+			return "F";
+		}
+	}
+
+	/**
+	 * Returns the student's grade for a course in letter grade format
+	 * 
+	 * @param courseCode
+	 * @return
+	 */
+	public String getLetterGrade(String courseCode) {
+		String courseCodeString = Course.cleanCourseName(courseCode);
+		Course courseToAdd = getCourseObject(courseCodeString, studentCourses); //
+		int targetIndex = studentCourses.indexOf(courseToAdd);
+		Double returnGrade = studentGrades.get(targetIndex);
+		String returnLetterGrade = gradeToLetter(returnGrade);
+		System.out.println("Grade: " + returnLetterGrade);
+		return returnLetterGrade;
+
+	}
+}
