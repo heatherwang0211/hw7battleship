@@ -1,0 +1,231 @@
+package roles;
+
+import java.util.ArrayList;
+
+import courses.Course;
+import files.FileInfoReader;
+
+public class Admin extends User {
+
+	private static String ADMIN_ROLE = "admin"; // the role of a admin will always be a "admin"
+
+	public Admin(String username, String password, String name, String id) {
+		super(ADMIN_ROLE, username, password, name, id);
+
+	}
+
+	/**
+	 * Adds a course to the professor's academic plan
+	 * 
+	 * @param courseID
+	 * @param professor
+	 * @throws Exception
+	 */
+	public void addCourseToProfessor(String courseID, Professor professor, ArrayList<Course> coursesCatalog) throws Exception {
+	    String cleanedCourseID = Course.cleanCourseName(courseID);
+	    Course courseToAdd = getCourseObject(cleanedCourseID, coursesCatalog);
+
+	    if (courseToAdd != null) { // if we got a course, we need to loop through eachone and compare IDs
+	        boolean courseAdded = false; 
+	        for (Course c : professor.getEditableCourses()) {
+	            if (c.getCourseID().equals(cleanedCourseID)) {
+	            	courseAdded = true; // stop the process before we add a duplicate
+	                break;
+	            }
+	        }
+	        if (!courseAdded) {
+	            professor.addCourse(cleanedCourseID, coursesCatalog);
+	            System.out.println(cleanedCourseID + " has been added to the Professor's schedule.");
+	        } else {
+	            System.out.println(
+	                    cleanedCourseID + " is already present in the Professor's schedule and thus was not added.");
+	        }
+	    } else {
+	        System.out.println("Course " + cleanedCourseID + " does not exist in the course catalog.");
+	    }
+	}
+
+	/**
+	 * Adds a course to the student's academic plan
+	 * 
+	 * @param courseID
+	 * @param student
+	 */
+	public void addCourseToStudent(String courseID, Student student, ArrayList<Course> coursesCatalog) {
+	    String cleanedCourseID = Course.cleanCourseName(courseID);
+	    Course courseToAdd = getCourseObject(cleanedCourseID, coursesCatalog); // grab the course object
+
+	    if (courseToAdd != null) { // if we got a course, we need to loop through eachone and compare IDs
+	        boolean courseAdded = false;
+	        for (Course course : student.getEditableCourses()) {
+	            if (course.getCourseID().equals(cleanedCourseID)) {
+	            	courseAdded = true; // stop the process before we add a duplicate
+	                break;
+	            }
+	        }
+	        if (!courseAdded) {
+	            student.addCourse(cleanedCourseID, coursesCatalog);
+	            System.out.println(cleanedCourseID + " has been added to the student's schedule.");
+	        } else {
+	            System.out.println(
+	                    cleanedCourseID + " is already present in the student's schedule and thus was not added.");
+	        }
+	    } else {
+	        System.out.println(cleanedCourseID + " does not exist in the course catalog.");
+	    }
+	}
+
+	/**
+	 * Shows all the courses a professor has on their schedule
+	 * 
+	 * @param professor
+	 */
+	public void viewAllProfessorCourses(Professor professor) {
+		professor.printAllProfessorsCourseInfo();
+
+	}
+
+	/**
+	 * Shows all the courses a professor has on their schedule
+	 * 
+	 * @param professor
+	 */
+	public void viewAllStudentCourses(Student student) {
+		student.printAllStudentCourseInfo();
+	}
+
+	/**
+	 * Adds a new course to the course catalog
+	 * 
+	 * @param courseID
+	 * @param courseName
+	 * @param lecturer
+	 * @param days
+	 * @param startTime
+	 * @param endTime
+	 * @param capacity
+	 * @param courseInfo
+	 */
+	public void addCourseToCatalog(String courseID, String courseName, String lecturer, String days, String startTime,
+			String endTime, int capacity, ArrayList<Course> coursesCatalog) { // @zane renamed to
+																				// coursescatalog
+		for (Course course : coursesCatalog) { // @zane renamed to coursescatalog
+			if (course.getCourseID().equals(courseID)) {
+				System.out.println(courseID + " already exists in the catalog.");
+				return;
+			}
+		}
+
+		Course newCourse = new Course(courseID, courseName, lecturer, days, startTime, endTime, capacity);
+		coursesCatalog.add(newCourse);
+		// add new course
+		// fileReader.getCourseInfo().add(newCourse); //@zane
+		System.out.println(courseID + " has been successfully added to the catalog.");
+	}
+
+	/**
+	 * Removes a course from the course catalog
+	 * 
+	 * @param username
+	 */
+	public static void removeCourse(String courseID, ArrayList<Course> coursesCatalog) { // @zane added coursesCatalog
+
+		// Locate course
+		for (Course course : coursesCatalog) {
+			if (course.getCourseID().equals(courseID)) {
+				coursesCatalog.remove(course); // Remove the course from the list -- @Yiju - I updated this code but
+												// worry it might not have changed the courseInfo in fileinforeader
+				System.out.println(course.getCourseName() + " has been successfully removed.");
+				return;
+			}
+		}
+		System.out.println(courseID + " not found.");
+	}
+
+	/**
+	 * Creates a new professor
+	 * 
+	 * @param username
+	 * @param password
+	 * @param name
+	 * @param id
+	 */
+	public void addProfessor(String username, String password, String name, String id,
+			ArrayList<Professor> professors) { // @zane added arraylist professors
+
+		// Check if a professor with the same username already exists
+		for (Professor prof : professors) {
+			if (prof.getUsername().equals(username)) {
+				System.out.println("A professor with username " + username + " already exists. ");
+				return;
+			}
+		}
+
+		Professor newProfessor = new Professor(username, password, name, id);
+		professors.add(newProfessor); // Add to the list of professors // @Yiju - here we would need to use a setter
+										// method to set fileReader.setProfInfo = professors.
+
+		System.out.println("Professor " + name + " has been successfully added.");
+	}
+
+	/**
+	 * Removes a professor from the list
+	 * 
+	 * @param username
+	 */
+	public void removeProfessor(String username, ArrayList<Professor> professors) { // @zane added arraylist
+
+		// Iterate through the list of professors to find the one with the given
+		// username
+		for (Professor prof : professors) {
+			if (prof.getUsername().equals(username)) {
+				professors.remove(prof); // Remove the professor from the list // @Yiju - here we would need to use a
+											// setter method to set fileReader.setProfInfo = professors.
+				System.out.println(prof.getName() + " has been successfully removed.");
+				return;
+			}
+		}
+		System.out.println(username + " not found.");
+	}
+
+	/**
+	 * Adds a new student
+	 * 
+	 * @param username
+	 * @param password
+	 * @param name
+	 * @param id
+	 */
+	public void addStudent(String username, String password, String name, String id, ArrayList<Student> students) {
+		for (Student student : students) {
+
+			if (student.getUsername().equals(username)) {
+				System.out.println("A student with username " + username + " already exists. ");
+				return;
+			}
+		}
+
+		Student newStudent = new Student(username, password, name, id);
+		students.add(newStudent); // Add to the list of professors // @Yiju - here we would need to use a setter
+									// method to set fileReader.setProfInfo = professors.
+
+		System.out.println("Professor " + name + " has been successfully added.");
+	}
+
+	/**
+	 * Removes a student from the list
+	 * 
+	 * @param username
+	 */
+	public static void removeStudent(String username, ArrayList<Student> students) {
+		for (Student stud : students) {
+			if (stud.getUsername().equals(username)) {
+				students.remove(stud); // Remove the professor from the list
+				System.out.println(stud.getName() + " has been successfully removed.");
+				return;
+			}
+		}
+		System.out.println(username + " not found.");
+	}
+
+}
