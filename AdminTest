@@ -1,0 +1,239 @@
+// package roles;
+
+// import static org.junit.jupiter.api.Assertions.*;
+
+// import java.util.ArrayList;
+
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
+
+// import courses.Course;
+// import files.FileInfoReader;
+
+// class AdminTest {
+
+// 	private Admin admin;
+// 	private Student student;
+// 	private Professor professor;
+// 	private Course testCourse1;
+// 	private Course testCourse2;
+// 	private FileInfoReader fileReader;
+// 	private ArrayList<Course> courseInfo;
+// 	private ArrayList<Student> studentInfo;
+// 	private ArrayList<Professor> profInfo;
+// 	private ArrayList<Admin> adminInfo;
+
+// 	@BeforeEach
+// 	void setUp() {
+// 		// create a new professor every time we run a new test
+// 		admin = new Admin("Dobby", "freeelf", "Dobby Malfoy", "00000");
+// 		student = new Student("HarryPotter", "privetdrive", "Harry Potter", "11111");
+// 		professor = new Professor("AlbyDums", "password123", "Albus Dumbledore", "77777");
+
+// 		// Create some example courses
+// 		// Course(String courseID, String courseName, String lecturer, String days,
+// 		// String startTime, String endTime, int capacity
+// 		testCourse1 = new Course("MAG223", "Defense against the dark arts", "Gilderoy Lockhart", "MW", "9:00", "10:15",
+// 				100);
+// 		testCourse2 = new Course("POT777", "Potions", "Severus Snape", "MWF", "9:30", "12:15", 50);
+
+// 		String fileName = "src/courseInfo.txt";
+// 		// create new instance
+// 		FileInfoReader fileReader = new FileInfoReader(); //
+
+
+
+// 		fileReader = new FileInfoReader();
+// 		courseInfo = fileReader.getCourseInfo();
+// 		studentInfo = fileReader.getStudentInfo();
+// 		profInfo = fileReader.getProfInfo();
+// 		adminInfo = fileReader.getAdminInfo(); 
+// 	}
+
+// 	@Test
+// 	void testAddCourseToProfessor() throws Exception { // throw an exception because of checkScheduleConflict 
+// 	    // A new professor should have no classes
+// 	    assertEquals(0, professor.getEditableCourses().size());
+
+// 	    // An admin should be able to add CIT591 to the professor
+// 	    courseInfo.add(testCourse1); // add the missing course to pass the test case
+// 	    admin.addCourseToProfessor("MAG223", professor, courseInfo);
+// 	    assertEquals(1, professor.getEditableCourses().size()); // after adding, the course list should be size 1
+// 	    assertEquals("MAG223", professor.getEditableCourses().get(0).getCourseID()); // after adding, the course should be in the right position
+
+// 	    /*
+// 	    // Admin should be able to add POT777 to the professor
+// 	    admin.addCourseToProfessor("POT777", professor, courseInfo);
+// 	    assertEquals(2, professor.getEditableCourses().size()); // after adding the size should be 2
+
+// 	    // duplicates are not allowed so lets test for that
+// 	    admin.addCourseToProfessor("POT777", professor, courseInfo);
+// 	    assertEquals(2, professor.getEditableCourses().size()); // No duplicates expected
+// 	    */
+// 	}
+
+// 	@Test
+// 	void testAddCourseToStudent() {
+// 	    // A new student should have no classes
+// 	    assertEquals(0, student.getEditableCourses().size());
+
+// 	    // An incorrectly formatted course should not work
+// 	    admin.addCourseToStudent("000LOL", student, courseInfo);
+// 	    assertTrue(student.getEditableCourses().isEmpty());
+
+// 	    // An admin should be able to add CIT591 to the student
+// 	    courseInfo.add(testCourse1); // add the missing course to pass the test case
+// 	    admin.addCourseToStudent("CIT591", student, courseInfo);
+// 	    assertEquals(1, student.getEditableCourses().size());
+// 	    assertEquals("CIT591", student.getEditableCourses().get(0).getCourseID());
+
+// 	    /*
+// 	    // Admin should be able to add POT777 to the professor
+// 	    admin.addCourseToStudent("POT777", student, courseInfo);
+// 	    assertEquals(2, student.getEditableCourses().size()); 
+
+// 	    // Attempt to add "POT777" again (should not be added if duplicates are prevented)
+// 	    admin.addCourseToStudent("POT777", student, courseInfo);
+// 	    assertEquals(2, student.getEditableCourses().size()); // No duplicates expected
+// 	    */
+// 	}
+
+// 	@Test
+// 	void testAddCourseToCatalog() {
+// 	    // Create a new course arraylist
+// 	    ArrayList<Course> newCourseInfo = new ArrayList<>();
+
+// 	    // The empty course catalog should have size of zero
+// 	    assertEquals(0, newCourseInfo.size());
+
+// 	    // Once we add a course the size should be 1
+// 	    admin.addCourseToCatalog("MAG101", "Spells", "Horace Slughorn", "MW", "8:00", "9:25", 500, newCourseInfo);
+// 	    assertEquals(1, newCourseInfo.size());
+
+// 	    // The course should be added in such a way that it can be added to a student's schedule
+// 	    admin.addCourseToStudent("MAG101", student, newCourseInfo);
+// 	    assertNull(student.getGrade("MAG101")); // there should be a null placeholder where the grade for that class goes
+// 	}
+
+// 	@Test
+// 	void testRemoveCourseFromCatalog() {
+// 		fileReader = new FileInfoReader();
+// 		ArrayList<Course> newCourseInfo = new ArrayList<>();
+// 		// get the initial size of the course catalog
+// 		int courseListSize = newCourseInfo.size();
+// 		// add a course
+// 		admin.addCourseToCatalog("MAG101", "Spells", "Horrace Slughorn", "MW", "8:00", "9:25", 500, newCourseInfo);
+
+// 		// After adding a course, show that the sizes are not the same.
+// 		assertNotEquals(courseListSize, newCourseInfo.size());
+// 		Admin.removeCourse("MAG101", newCourseInfo);
+// 		assertEquals(courseListSize, newCourseInfo.size()); // demonstrate that the after removing the course, it is the
+// 															// same size as it was prior to adding.
+// 		assertTrue(newCourseInfo.isEmpty());
+
+// 		// testing removing a course that is not present in the catalog
+// 		Admin.removeCourse("MAG202", newCourseInfo);
+// 		assertEquals(courseListSize, newCourseInfo.size()); // since that course was not present, the size is unchanged
+
+// 	}
+
+// 	@Test
+// 	void testAddProfessor() {
+// 		String fileName = "src/courseInfo.txt";
+// 		fileReader = new FileInfoReader();
+// 		// create new instance
+// 		FileInfoReader fileReader = new FileInfoReader(); //
+// 		ArrayList<Professor> profInfo = new ArrayList<>();
+
+// 		// After creating the list of professors, there should be none in it and thus we
+// 		// should prove that the list is empty
+// 		assertTrue(profInfo.isEmpty());
+// 		admin.addProfessor("AlbyDums", "password123", "Albus Dumbledore", "77777", profInfo);
+// 		// After adding a professor should see that it is in fact not empty
+// 		assertFalse(profInfo.isEmpty());
+// 		// After adding a professor we should see that the size of the professors
+// 		// arraylist is 1
+// 		assertEquals(1, profInfo.size());
+// 		// After removing the professor in first position we should have an empty
+// 		// arraylist again
+// 		profInfo.remove(0);
+// 		assertTrue(profInfo.isEmpty());
+// 	}
+
+// 	@Test
+// 	void testRemoveProfessor() {
+// 		String fileName = "src/courseInfo.txt";
+// 		fileReader = new FileInfoReader();
+// 		// create new instance
+// 		FileInfoReader fileReader = new FileInfoReader(); //
+// 		ArrayList<Professor> profInfo = new ArrayList<>();
+
+// 		// After creating the list of professors, there should be none in it and thus we
+// 		// should prove that the list is empty
+// 		assertTrue(profInfo.isEmpty());
+// 		admin.addProfessor("AlbyDums", "password123", "Albus Dumbledore", "77777", profInfo);
+// 		// After adding a professor should see that it is in fact not empty
+
+// 		assertFalse(profInfo.isEmpty());
+
+// 		admin.addProfessor("Kenny", "oklama", "Kendrick Lamar", "80808", profInfo);
+// 		admin.addProfessor("TSwift", "evermore", "Taylor Swift", "98989", profInfo);
+
+// 		// After adding three professors we should see that the size is 3
+// 		assertEquals(3, profInfo.size());
+// 		admin.removeProfessor("TSwift", profInfo);
+// 		// After removing a professor we should see the size goes down by 1
+// 		assertEquals(2, profInfo.size());
+
+// 	}
+
+// 	@Test
+// 	void testAddSudent() {
+// 		String fileName = "src/courseInfo.txt";
+// 		fileReader = new FileInfoReader();
+// 		// create new instance
+// 		FileInfoReader fileReader = new FileInfoReader(); //
+// 		ArrayList<Student> studfInfo = new ArrayList<>();
+
+// 		// After creating the list of professors, there should be none in it and thus we
+// 		// should prove that the list is empty
+// 		assertTrue(studfInfo.isEmpty());
+// 		admin.addStudent("AlbyDums", "password123", "Albus Dumbledore", "77777", studfInfo);
+// 		// After adding a professor should see that it is in fact not empty
+// 		assertFalse(studfInfo.isEmpty());
+// 		// After adding a professor we should see that the size of the professors
+// 		// arraylist is 1
+// 		assertEquals(1, studfInfo.size());
+// 		// After removing the professor in first position we should have an empty
+// 		// arraylist again
+// 		studfInfo.remove(0);
+// 		assertTrue(studfInfo.isEmpty());
+// 	}
+
+// 	@Test
+// 	void testRemoveStudent() {
+// 		String fileName = "src/courseInfo.txt";
+// 		fileReader = new FileInfoReader();
+// 		// create new instance
+// 		FileInfoReader fileReader = new FileInfoReader(); //
+// 		ArrayList<Student> studfInfo = new ArrayList<>();
+
+// 		// After creating the list of students, there should be none in it and thus we
+// 		// should prove that the list is empty
+// 		assertTrue(studfInfo.isEmpty());
+// 		admin.addStudent("crabCake", "goyleBuddy", "Crab Goyle", "37378", studfInfo);
+// 		// After adding a student should see that it is in fact not empty
+
+// 		assertFalse(studfInfo.isEmpty());
+
+// 		admin.addStudent("RonnyWeez", "scabbers", "Ron Weasley", "12567", studfInfo);
+// 		admin.addStudent("Malfarino", "blonde", "Draco Malfoy", "99098", studfInfo);
+
+// 		// After adding three students we should see that the size is 3
+// 		assertEquals(3, studfInfo.size());
+// 		admin.removeStudent("Malfarino", studfInfo);
+// 		// After removing a student we should see the size goes down by 1
+// 		assertEquals(2, studfInfo.size());
+
+
+// }}
