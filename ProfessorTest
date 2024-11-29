@@ -1,0 +1,81 @@
+package roles;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import courses.Course;
+import files.FileInfoReader;
+
+class ProfessorTest {
+
+	private Admin admin;
+	private Student student;
+	private Professor professor;
+	private Course testCourse1;
+	private Course testCourse2;
+	private FileInfoReader fileReader;
+	private ArrayList<Course> courseInfo;
+	private ArrayList<Student> studentInfo;
+	private ArrayList<Professor> profInfo;
+	private ArrayList<Admin> adminInfo;
+
+	@BeforeEach
+	void setUp() {
+
+		// create a new professor every time we run a new test
+		admin = new Admin("Dobby", "freeelf", "Dobby Malfoy", "00000");
+		student = new Student("HarryPotter", "privetdrive", "Harry Potter", "11111");
+		professor = new Professor("AlbyDums", "password123", "Albus Dumbledore", "77777");
+
+		// Create some example courses
+		// Course(String courseID, String courseName, String lecturer, String days,
+		// String startTime, String endTime, int capacity
+		testCourse1 = new Course("MAG223", "Defense against the dark arts", "Gilderoy Lockhart", "MW", "9:00", "10:15",
+				100);
+		testCourse2 = new Course("POT777", "Potions", "Reverus Snape", "MWF", "9:30", "12:15", 50);
+
+		String fileName = "src/courseInfo.txt";
+		// create new instance
+		FileInfoReader fileReader = new FileInfoReader(); //
+
+		fileReader = new FileInfoReader();
+		courseInfo = fileReader.getCourseInfo();
+		studentInfo = fileReader.getStudentInfo();
+		profInfo = fileReader.getProfInfo();
+		adminInfo = fileReader.getAdminInfo();
+	}
+
+	@Test
+	void testAddCourse() throws Exception {
+	    fileReader = new FileInfoReader();
+	    ArrayList<Course> courseInfo = fileReader.getCourseInfo();
+
+	    // A new professor should have no classes
+	    assertEquals(0, professor.getEditableCourses().size());
+
+	    // Add courses to the catalog
+	    courseInfo.add(testCourse1); 
+	    courseInfo.add(testCourse2);
+
+	    // A professor should be able to add MAG223
+	    professor.addCourse("MAG223", courseInfo);
+	    assertEquals(1, professor.getEditableCourses().size());
+	    assertEquals("MAG223", professor.getEditableCourses().get(0).getCourseID());
+
+	    /*
+	    // Testing for duplicates
+	    professor.addCourse("POT777", courseInfo);
+	    professor.addCourse("POT777", courseInfo);
+	    professor.addCourse("POT777", courseInfo);
+	    assertEquals(2, professor.getEditableCourses().size());
+
+	    professor.addCourse("POT777", courseInfo);
+	    assertEquals(2, professor.getEditableCourses().size()); // No duplicates expected
+	    */
+	}
+
+}
