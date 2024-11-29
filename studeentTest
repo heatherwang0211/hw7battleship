@@ -1,0 +1,118 @@
+// package roles;
+
+// import static org.junit.jupiter.api.Assertions.*;
+
+// import java.util.ArrayList;
+
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
+
+// import courses.Course;
+// import files.FileInfoReader;
+
+// class StudentTest {
+
+// 	private Admin admin;
+// 	private Student student;
+// 	private Professor professor;
+// 	private Course testCourse1;
+// 	private Course testCourse2;
+// 	private FileInfoReader fileReader;
+// 	private ArrayList<Course> courseInfo;
+// 	private ArrayList<Student> studentInfo;
+// 	private ArrayList<Professor> profInfo;
+// 	private ArrayList<Admin> adminInfo;
+
+// 	@BeforeEach
+// 	void setUp() {
+// 		// create a new student every time we run a new test
+// 		admin = new Admin("Dobby", "freeelf", "Dobby Malfoy", "00000");
+// 		student = new Student("HarryPotter", "privetdrive", "Harry Potter", "11111");
+// 		professor = new Professor("AlbyDums", "password123", "Albus Dumbledore", "77777");
+
+// 		// Create some example courses
+// 		// Course(String courseID, String courseName, String lecturer, String days,
+// 		// String startTime, String endTime, int capacity
+// 		testCourse1 = new Course("MAG223", "Defense against the dark arts", "Gilderoy Lockhart", "MW", "9:00", "10:15",
+// 				100);
+// 		testCourse2 = new Course("POT777", "Potions", "Severus Snape", "MWF", "9:30", "12:15", 50);
+
+// 		String fileName = "src/courseInfo.txt";
+// 		// create new instance
+// 		FileInfoReader fileReader = new FileInfoReader(); // @zane
+
+// 		fileReader = new FileInfoReader();
+// 		courseInfo = fileReader.getCourseInfo();
+// 		studentInfo = fileReader.getStudentInfo();
+// 		profInfo = fileReader.getProfInfo();
+// 		adminInfo = fileReader.getAdminInfo();
+// 	}
+
+// 	@Test
+// 	void testAddCourse() {
+// 		fileReader = new FileInfoReader();
+// 		ArrayList<Course> courseInfo = fileReader.getCourseInfo();
+
+// 		// A new student should have no classes
+// 		assertEquals(0, student.getEditableCourses().size());
+
+// 		// An incorrectly formatted course should not work
+// 		student.addCourse("000LOL", courseInfo);
+// 		assertTrue(student.getEditableCourses().isEmpty());
+
+// 		// A student should be able to add a course
+// 		student.addCourse("CIT591", courseInfo); //
+// 		assertEquals(1, student.getEditableCourses().size());
+// 		assertEquals("CIT591", student.getEditableCourses().get(0).getCourseID());
+
+// 		// We cannot have duplicate courses
+// 		student.addCourse("CIT591", courseInfo);
+// 		student.addCourse("CIT591", courseInfo);
+// 		assertEquals(1, student.getEditableCourses().size()); // No duplicates
+// 	}
+
+// 	@Test
+// 	void testRemoveAStudentCourse() {
+// 		fileReader = new FileInfoReader();
+// 		ArrayList<Course> courseInfo = fileReader.getCourseInfo();
+
+// 		// A new student should have no classes
+// 		assertEquals(0, student.getEditableCourses().size());
+
+// 		// Removing a course from an empty course list should do nothing
+// 		student.removeAStudentCourse("CIT591");
+// 		assertEquals(0, student.getEditableCourses().size());
+
+// 		// A user should be able to add and remove a course properly
+// 		student.addCourse("CIT591", courseInfo);
+// 		assertEquals(1, student.getEditableCourses().size());
+// 		student.removeAStudentCourse("CIT591");
+// 		assertEquals(0, student.getEditableCourses().size());
+
+// 		// Trying to remove a course not in the list should not change anything
+// 		student.addCourse("CIT591", courseInfo);
+// 		assertEquals(1, student.getEditableCourses().size());
+// 		student.removeAStudentCourse("ZAN808"); // There is no course with this code
+// 		assertEquals(1, student.getEditableCourses().size());
+// 		assertEquals("CIT591", student.getEditableCourses().get(0).getCourseID());
+// 	}
+
+// 	@Test
+// 	void testSetGetGrade() {
+// 		fileReader = new FileInfoReader();
+// 		ArrayList<Course> courseInfo = fileReader.getCourseInfo();
+
+// 		// A new student should have no grades initially
+// 		assertEquals(0, student.getEditableCourses().size());
+// 		// Adding a course should allow setting a grade
+// 		student.addCourse("CIT591", courseInfo);
+// 		assertEquals(1, student.getEditableCourses().size());
+
+// 		// Test setting a new grade
+// 		student.setGrade("CIT591", 88.0, student.getEditableCourses()); // Set grade
+// 		assertEquals(88.0, student.getGrade("CIT591"), .001); // Verify grade is set correctly
+// 		//assertNotEquals(76.0, student.getGrade("CIT591"), .001); // Verify grade is not incorrect
+//         assertTrue(Math.abs(76.0 - student.getGrade("CIT591")) > 0.001, "The grade should not be 76.0.");
+// 	}
+
+// } // ending bracket
