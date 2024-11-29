@@ -1,0 +1,111 @@
+package roles;
+
+import java.util.ArrayList;
+
+import courses.Course;
+import files.FileInfoReader;
+
+public class Professor extends User {
+
+	private static String PROFESSOR_ROLE = "professor"; // the role of a professor will always be a "professor"
+	private ArrayList<Course> professorCourses; // an ArrayList of the courses that the professor teaches
+	private ArrayList<String> pupils; //
+
+	public Professor(String username, String password, String name, String id) {
+		super(PROFESSOR_ROLE, username, password, name, id);
+		this.professorCourses = new ArrayList<>();
+		this.pupils = new ArrayList<>();
+	}
+
+	/*
+	 * Getters & Setters ============================================
+	 */
+
+	/**
+	 * Prints the list of the courses
+	 * 
+	 * @return the courses the Professor has on their schedule
+	 */
+	public void viewCourses() {
+		for (Course course : professorCourses) {
+			System.out.println(course);
+		}
+	}
+
+	/**
+	 * Returns the editable list of the courses for the Professor
+	 * 
+	 * @return the courses the student is enrolled in
+	 */
+	public ArrayList<Course> getEditableCourses() {
+
+		return professorCourses;
+	}
+
+	/**
+	 * Prints all of the courses in the Professor's acadmic plan
+	 */
+	public void printAllProfessorsCourseInfo() {
+		System.out.println("See below for the professor's course information: ");
+		for (Course course : professorCourses) {
+			course.toString(); // @Zane updated to toString() from showCourseInfo()
+		}
+	}
+
+	/*
+	 * Core Methods ============================================
+	 */
+
+	/**
+	 * This methods adds a course to the professors teaching schedule
+	 * 
+	 * @param newCourse
+	 * @throws Exception
+	 */
+	public void addCourse(String courseID, ArrayList<Course> coursesCatalog) throws Exception {
+		String courseCodeString = Course.cleanCourseName(courseID); // Clean the course name and check the format
+		String regex = "([a-zA-Z]{3})(\\d{3})";
+		if (!courseCodeString.matches(regex)) {
+			System.out.println("Invalid course code format. Use 3 letters followed by 3 digits (e.g., CIT591).");
+			return;
+		}
+
+		// Grab the course object from the catalog
+		Course courseToAdd = getCourseObject(courseCodeString, coursesCatalog);
+		if (courseToAdd == null) {
+			System.out.println("Course " + courseCodeString + " is not found in the catalog and cannot be assigned.");
+			return;
+		}
+
+		// See if the course is already in the professor's teaching schedule
+		if (professorCourses.contains(courseToAdd)) {
+			System.out.println(courseCodeString + " is already in this Professor's teaching schedule.");
+			return;
+		}
+
+		// Check schedule conflicts
+		if (checkScheduleConflict(courseCodeString, this.getEditableCourses(), coursesCatalog)) {
+			System.out.println("Cannot assign course " + courseCodeString + " due to a scheduling conflict.");
+			return;
+		}
+
+		// Add the course to the professor
+		professorCourses.add(courseToAdd);
+		System.out.println(
+				"Course " + courseCodeString + " has been successfully assigned to the Professor's teaching schedule.");
+	}
+
+	/**
+	 * For a given course show the student list
+	 * 
+	 * @param courseID
+	 * @param coursesCatalog
+	 */
+
+	public void viewStudentsInCourse(String courseID, ArrayList<Course> coursesCatalog) {
+		String courseCodeString = Course.cleanCourseName(courseID);
+		Course course = getCourseObject(courseCodeString, coursesCatalog);
+		System.out.println(course.getEnrolledStudents());
+	}
+
+}
