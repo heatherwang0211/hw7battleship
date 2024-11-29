@@ -1,0 +1,235 @@
+package courses;
+ 
+import java.util.ArrayList; 
+
+//import files.FileInfoReader; //YIJU: Consider delete as it is not in use
+
+import roles.Student;
+import roles.User; 
+
+public class Course {
+
+	// the course's ID in the format of 3 capital letter + 3 integers e.g. CIT591
+	private String courseID;
+
+	// the course's name string, first letter of words capitalized, except function
+	// words e.g. and, or, with e.g. Introduction to Software Development
+	private String courseName;
+
+	// the course's lecturer name, first letter capitalized, first & last name,
+	// sometimes 1-2 middle names e.g. Brandon L Krakowsky
+	private String lecturer;
+
+	// day of week the course takes place in one capital letter e.g. MW = Monday,
+	// Wednesday. 1-2 letters
+	private String days;
+
+	// start time of class in military time with 4 digit representation e.g. 00:00
+	private String startTime;
+
+	// end time of class in military time with 4 digit representation e.g. 00:00
+	private String endTime;
+
+	// max class capacity in one integer e.g. 200
+	private int capacity;
+
+	// List of students enrolled in the course
+	private ArrayList<Student> enrolledStudents; 
+	
+	// CREATE A CONSTUCTOR
+	// initialize the parameters
+	public Course(String courseID, String courseName, String lecturer, String days, String startTime, String endTime,
+			int capacity) {
+		this.courseID = courseID;
+		this.courseName = courseName;
+		this.lecturer = lecturer;
+		this.days = days;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.capacity = capacity;
+		
+		
+		// YIJU: Before it is new ArrayList<>, I now changed it to an array list of student
+		// Initialize the list as empty
+		this.enrolledStudents = new ArrayList<Student>();
+	}
+
+	// GETTER AND SETTERS
+
+	// Getters for the above 7 private variables
+	public String getCourseID() {
+		return courseID;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public String getLecturer() {
+		return lecturer;
+	}
+
+	public String getDays() {
+		return days;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	// arraylist of enrolled students
+	public ArrayList<Student> getEnrolledStudents() {
+		return enrolledStudents;
+	}
+
+	
+	/**
+	 * returns all course information for the specific course
+	 */
+	@Override
+	public String toString() {
+		return "Course ID: " + courseID + "\n" + "Course Name: " + courseName + "\n" + "Lecturer: " + lecturer + "\n"
+				+ "Days: " + days + "\n" + "Start Time of Course: " + startTime + "\n" + "End Time of Course: "
+				+ endTime + "\n" + "Capacity of Course: " + capacity;
+	}
+	
+	/**
+	 * checks the courseIDs of course in question and a course object,
+	 * if they are the same, consider them the same course object 
+	 * returns false or true
+	 */ 
+	@Override
+	public boolean equals(Object courseObj) {
+	    if (this == courseObj) {
+	        return true; // The same object
+	    }
+	    if (courseObj == null || getClass() != courseObj.getClass()) {
+	        return false; // Null or not the same type
+	    }
+	    Course courseInQuestion = (Course) courseObj; // Cast to the appropriate type
+	    return this.courseID.equals(courseInQuestion.courseID); // Compare fields (adjust based on your class design)
+	}
+	
+	
+	/**
+	 * this method prints to the screen all the courses available in the catalog
+	 * 
+	 * @return course to be added 
+	 */
+	public static void viewAllCourses(ArrayList<Course> coursesCatalog) {
+		// reference the fileInfoReader created in controller to use
+		// @Yiju
+		//ArrayList<Course> courseCatalog = fileInfoReader.getCourseInfo();
+		System.out.println("All courses available in the catalog: ");
+		for (Course course : coursesCatalog) {
+			System.out.println(course);
+			System.out.println("");
+		}
+	}
+
+	/**
+	 * this helper function is more flexible with user input and turns any upper or
+	 * lower case into acceptable format if possible
+	 * 
+	 * @param courseName
+	 * @param part
+	 * @return
+	 */
+	public static String cleanCourseName(String courseID) {
+		if (courseID == null || courseID.length() < 6 || courseID.trim().length() > 6 ) {
+			return "Invalid courseID name string, cannot to be cleaned up. Input again.";
+		}
+
+		else {
+			// Extract the first three characters and convert them to uppercase
+			String part1 = courseID.substring(0, 3).toUpperCase().trim().replaceAll("\\s+", " ");
+
+			// Extract the last three characters (assumed to be digits) and leave them
+			// unchanged
+			String part2 = courseID.substring(courseID.length() - 3);
+
+			// combine
+			courseID = part1 + part2;
+
+			// converts user input to all uppercase
+			return courseID;
+		}
+	}
+
+	/**
+	 * this method adds a student to the course and perform checks such as: if
+	 * student already in course, if course at capacity
+	 * 
+	 * @param student object to be added to the course
+	 */
+	// Method to add a student to the course enrollment array list
+	public void addStudent(String studentID, ArrayList<Student> studentInfo) {
+		Student studentToAdd;
+		
+		try {
+		studentToAdd = User.getStudentObject(studentID, studentInfo);
+		}
+		catch (NullPointerException e) {
+			System.out.println("Student with ID " + studentID + " does not exist.");
+			throw e; 
+		}
+		if (enrolledStudents.size() >= capacity) {
+			System.out.println("Student cannot be added, course is at capacity");
+			return;
+		} 
+		for (Student enrolledStudent : enrolledStudents) {
+			if (enrolledStudent.getID().equals(studentID)) {
+				System.out.println("Student is already in the course.");
+				return;
+			}
+		} 
+		
+		enrolledStudents.add(studentToAdd); 
+		System.out.println("Student with the ID: " + studentToAdd + " has been added to the course");
+		
+		// YIJU: update capacity once a student is added
+		capacity = capacity -1;
+	}
+	
+	
+	/**
+	 * this removes the student from the course when student drops class this method
+	 * performs a check on whether the student is actually currently enrolled
+	 * 
+	 * @param studentID is the ID that refers to the unique student object
+	 */
+	// Method to remove a student from the course enrollment array list
+	public void removeStudent(String studentID, ArrayList<Student> studentsInfo) {
+		try {
+		Student studentToRemove = User.getStudentObject(studentID, studentsInfo);
+		if (studentToRemove == null) {
+			throw new NullPointerException("Student with ID " + studentID + " does not exist.");
+		}
+		for (int i = 0; i < enrolledStudents.size(); i++) {
+			if (enrolledStudents.get(i).getID().equals(studentID)) {
+				enrolledStudents.remove(i);
+				System.out.println("Student with ID " + studentToRemove + " has been removed.");
+				return;
+			}
+		} 
+		System.out.println(
+				"Cannot remove student from enrolment array list because student not found. ID: " + studentToRemove);
+	
+		}
+		
+		catch (NullPointerException e) {
+	        // Handle NullPointerException
+	        System.out.println("Error: " + e.getMessage());
+	        throw e; // throw it back
+ 
+		}
+	}
+}
